@@ -13,37 +13,33 @@ export function buildTransporter() {
 
   const secure = port === 465;
 
+  const rejectUnauthorized =
+    String(process.env.SMTP_TLS_REJECT_UNAUTHORIZED || "true").toLowerCase() !==
+    "false";
+
   return nodemailer.createTransport({
     host,
     port,
     secure,
     auth: { user, pass },
-    // Debug
-    logger: true,
-    debug: true,
-    tls: {
-      // Kurumsal mail sistemlerinde bazen sertifika zinciri sorun çıkarır.
-      // Eğer "self signed certificate" görürsen bunu false yapacağız.
-      rejectUnauthorized: false,
-    },
+    logger: false,
+    debug: false,
+    tls: { rejectUnauthorized },
   });
 }
 
 export async function sendLeadEmail({ to, subject, text }) {
   const transporter = buildTransporter();
-  const from = process.env.MAIL_FROM || process.env.SMTP_USER;
 
-  // SMTP erişimini test et
+  const from = process.env.MAIL_FROM || process.env.SMTP_USER;
   await transporter.verify();
 
-  const info = await transporter.sendMail({
+  return transporter.sendMail({
     from,
     to,
     subject,
     text,
   });
-
-  return info;
 }
 
 export function formatMailError(e) {
