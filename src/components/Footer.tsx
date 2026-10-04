@@ -1,58 +1,83 @@
-import { Facebook, Instagram, Linkedin, Twitter, Phone } from 'lucide-react';
+import { Instagram, Linkedin, Phone } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function Footer() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const { language } = useLanguage();
 
-  const productCategories = [
-    'Naylon Torbalar',
-    'Jelatin Ambalaj',
-    'Endüstriyel Ambalaj',
-    'Kargo Poşetleri',
-    'Özel Üretim',
-    'Geri Dönüşüm Ürünleri'
+  const copy = {
+    tr: {
+      description: "Ser Plastik; perakende, e-ticaret ve endüstriyel kullanım için plastik ambalaj çözümleri üretir.",
+      products: "Ürünler",
+      links: "Hızlı Erişim",
+      contact: "İletişim",
+      home: "Ana Sayfa",
+      about: "Hakkımızda",
+      production: "Üretim",
+      quote: "Teklif Al",
+      whatsapp: "WhatsApp ile İletişim",
+      rights: "Tüm hakları saklıdır.",
+      privacy: "Gizlilik",
+      terms: "Kullanım Koşulları",
+      kvkk: "KVKK",
+    },
+    en: {
+      description: "Ser Plastik produces plastic packaging solutions for retail, e-commerce and industrial applications.",
+      products: "Products",
+      links: "Quick Links",
+      contact: "Contact",
+      home: "Home",
+      about: "About",
+      production: "Production",
+      quote: "Request Quote",
+      whatsapp: "Contact on WhatsApp",
+      rights: "All rights reserved.",
+      privacy: "Privacy",
+      terms: "Terms of Use",
+      kvkk: "Data Protection",
+    },
+  }[language];
+
+  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+  const productNames =
+    language === "en"
+      ? ["Plastic Bags", "Transparent Packaging", "Industrial Packaging", "Courier Packaging", "Custom Production", "Recycled Products"]
+      : ["Naylon Torbalar", "Şeffaf Ambalaj", "Endüstriyel Ambalaj", "Kargo Poşetleri", "Özel Üretim", "Geri Dönüşüm Ürünleri"];
+
+  const links = [
+    ["anasayfa", copy.home],
+    ["hakkimizda", copy.about],
+    ["urunler", copy.products],
+    ["uretim", copy.production],
+    ["teklif", copy.quote],
+    ["iletisim", copy.contact],
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-[#000000] to-[#0D47A1] text-white pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+    <footer className="relative overflow-hidden bg-[#031126] pb-8 pt-16 text-white">
+      <div className="absolute inset-0 premium-grid opacity-10" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 border-b border-white/10 pb-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <img src="/logo.png" alt="Ser Plastik Logo" className="h-20 w-auto mb-6" />
-            <p className="text-white/80 leading-relaxed mb-6">
-              25+ yıllık tecrübesiyle plastik ambalaj sektöründe güvenilir çözüm ortağınız.
-              Kaliteli üretim, hızlı teslimat ve müşteri memnuniyeti odaklı hizmet.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="bg-white/10 p-3 rounded-lg hover:bg-white/20 transition-colors">
-                <Facebook size={20} />
+            <img src="/logo.png" alt="Ser Plastik" className="h-16 w-auto" />
+            <p className="mt-5 max-w-sm leading-7 text-white/60">{copy.description}</p>
+            <div className="mt-6 flex gap-3">
+              <a href="#" className="rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label="Instagram">
+                <Instagram size={18} />
               </a>
-              <a href="#" className="bg-white/10 p-3 rounded-lg hover:bg-white/20 transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="bg-white/10 p-3 rounded-lg hover:bg-white/20 transition-colors">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="bg-white/10 p-3 rounded-lg hover:bg-white/20 transition-colors">
-                <Twitter size={20} />
+              <a href="#" className="rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label="LinkedIn">
+                <Linkedin size={18} />
               </a>
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-6 text-white">Ürün Kategorileri</h3>
-            <ul className="space-y-3">
-              {productCategories.map((category, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() => scrollToSection('urunler')}
-                    className="text-white/80 hover:text-white transition-colors"
-                  >
-                    {category}
+            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/45">{copy.products}</h3>
+            <ul className="mt-5 space-y-3">
+              {productNames.map((item) => (
+                <li key={item}>
+                  <button onClick={() => scrollTo("urunler")} className="text-left text-sm text-white/65 transition hover:text-white">
+                    {item}
                   </button>
                 </li>
               ))}
@@ -60,83 +85,48 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-6 text-white">Hızlı Erişim</h3>
-            <ul className="space-y-3">
-              <li>
-                <button onClick={() => scrollToSection('anasayfa')} className="text-white/80 hover:text-white transition-colors">
-                  Ana Sayfa
-                </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('hakkimizda')} className="text-white/80 hover:text-white transition-colors">
-                  Hakkımızda
-                </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('urunler')} className="text-white/80 hover:text-white transition-colors">
-                  Ürünler
-                </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('uretim')} className="text-white/80 hover:text-white transition-colors">
-                  Üretim Sürecimiz
-                </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('teklif')} className="text-white/80 hover:text-white transition-colors">
-                  Teklif Al
-                </button>
-              </li>
-              <li>
-                <button onClick={() => scrollToSection('iletisim')} className="text-white/80 hover:text-white transition-colors">
-                  İletişim
-                </button>
-              </li>
+            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/45">{copy.links}</h3>
+            <ul className="mt-5 space-y-3">
+              {links.map(([id, label]) => (
+                <li key={id}>
+                  <button onClick={() => scrollTo(id)} className="text-left text-sm text-white/65 transition hover:text-white">
+                    {label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-6 text-white">İletişim Bilgileri</h3>
-            <ul className="space-y-4">
-              <li className="text-white/80">
-                <strong className="text-white">Adres:</strong><br />
-                Hacıeyüplü Mah. 3101 sokak no: 27/1<br />
-                Merkezefendi / DENİZLİ
-              </li>
-              <li>
-                <a href="tel:02583713050" className="text-white/80 hover:text-white transition-colors flex items-center">
-                  <Phone size={16} className="mr-2" />
-                  0258 371 30 50
-                </a>
-              </li>
-              <li>
-                <a href="mailto:info@ser-plastik.com" className="text-white/80 hover:text-white transition-colors">
-                  info@ser-plastik.com
-                </a>
-              </li>
-            </ul>
+            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/45">{copy.contact}</h3>
+            <div className="mt-5 space-y-4 text-sm text-white/65">
+              <p>Hacıeyüplü Mah. 3101 Sokak No: 27/1<br />Merkezefendi / Denizli / Türkiye</p>
+              <a href="tel:02583713050" className="flex items-center gap-2 transition hover:text-white">
+                <Phone size={15} /> 0258 371 30 50
+              </a>
+              <a href="tel:+905336667381" className="flex items-center gap-2 transition hover:text-white">
+                <Phone size={15} /> +90 533 666 73 81
+              </a>
+              <a href="mailto:info@ser-plastik.com" className="block transition hover:text-white">info@ser-plastik.com</a>
+            </div>
 
             <a
               href="https://wa.me/905336667381"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block bg-[#25D366] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#20BA5A] transition-colors"
+              className="mt-6 inline-flex rounded-full bg-[#25D366] px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 hover:bg-[#20BA5A]"
             >
-              WhatsApp ile İletişim
+              {copy.whatsapp}
             </a>
           </div>
         </div>
 
-        <div className="border-t border-white/20 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-white/70 text-sm text-center md:text-left">
-              © 2025 Ser Üretim Plastik Sanayi Limited Şirketi. Tüm hakları saklıdır.
-            </p>
-            <div className="flex space-x-6 text-sm">
-              <a href="#" className="text-white/70 hover:text-white transition-colors">Gizlilik Politikası</a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">Kullanım Koşulları</a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">KVKK</a>
-            </div>
+        <div className="flex flex-col gap-4 pt-7 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Ser Üretim Plastik Sanayi Limited Şirketi. {copy.rights}</p>
+          <div className="flex flex-wrap gap-5">
+            <a href="#" className="transition hover:text-white">{copy.privacy}</a>
+            <a href="#" className="transition hover:text-white">{copy.terms}</a>
+            <a href="#" className="transition hover:text-white">{copy.kvkk}</a>
           </div>
         </div>
       </div>
