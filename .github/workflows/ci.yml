@@ -93,3 +93,31 @@ jobs:
           node --check mailer.js
           node --check intents/intentDetector.js
           node --check ai/openai.js
+
+      - name: Mimi intent behavior checks
+        run: |
+          node --input-type=module <<'NODE'
+          import { detectIntent } from "./intents/intentDetector.js";
+
+          const cases = [
+            ["teklif almak istiyorum", "sales"],
+            ["I need a quotation", "sales"],
+            ["kargo poşeti arıyorum", "product"],
+            ["industrial packaging", "product"],
+            ["telefon numaranız nedir", "contact"],
+            ["what is your email address", "contact"],
+            ["ser-plastik.com nedir", "website"],
+            ["what is this website", "website"],
+            ["merhaba", "greeting"],
+            ["hello", "greeting"],
+          ];
+
+          for (const [message, expected] of cases) {
+            const actual = detectIntent(message);
+            if (actual !== expected) {
+              throw new Error(`Intent mismatch for "${message}": expected ${expected}, got ${actual}`);
+            }
+          }
+
+          console.log(`Mimi intent checks passed: ${cases.length}`);
+          NODE
