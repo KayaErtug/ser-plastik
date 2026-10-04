@@ -85,7 +85,7 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 pb-32 pt-24 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
         <div className="max-w-5xl">
-          <div className="reveal-up mb-6 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-white/75 backdrop-blur-xl">
+          <div className="reveal-up mb-6 inline-flex items-center gap-3 rounded-full border border-white/[0.15] bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-white/75 backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,.8)]" />
             {copy.eyebrow}
           </div>
@@ -95,13 +95,13 @@ export default function Hero() {
             <span className="mt-3 block text-gradient-premium">{copy.accent}</span>
           </h1>
 
-          <p className="reveal-up-delay-2 mt-8 max-w-2xl text-lg leading-8 text-white/72 sm:text-xl">
+          <p className="reveal-up-delay-2 mt-8 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
             {copy.description}
           </p>
 
-          <div className="reveal-up-delay-3 mt-8 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-[.16em] text-white/65">
-            <span className="rounded-full border border-white/12 bg-white/7 px-4 py-2 backdrop-blur">{copy.experience}</span>
-            <span className="rounded-full border border-white/12 bg-white/7 px-4 py-2 backdrop-blur">{copy.market}</span>
+          <div className="reveal-up-delay-3 mt-8 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-[.16em] text-white/[0.65]">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.07] px-4 py-2 backdrop-blur">{copy.experience}</span>
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.07] px-4 py-2 backdrop-blur">{copy.market}</span>
           </div>
 
           <div className="reveal-up-delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -114,13 +114,13 @@ export default function Hero() {
             </button>
             <button
               onClick={() => scrollTo("teklif")}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3.5 font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-white/16"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3.5 font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-white/[0.16]"
             >
               {copy.quote}
             </button>
             <button
-              onClick={() => document.querySelector<HTMLButtonElement>('[aria-label="Mimi - Ser Plastik AI Satış Asistanı"]')?.click()}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-6 py-3.5 font-bold text-cyan-50 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-cyan-300/15"
+              onClick={() => document.getElementById("mimi-chat-trigger")?.click()}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-6 py-3.5 font-bold text-cyan-50 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-cyan-300/[0.15]"
             >
               <MessageCircleMore size={18} />
               {copy.mimi}
@@ -129,7 +129,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 z-20 overflow-hidden border-y border-white/10 bg-[#071c3b]/78 py-4 backdrop-blur-xl">
+      <div className="absolute inset-x-0 bottom-0 z-20 overflow-hidden border-y border-white/10 bg-[#071c3b]/[0.78] py-4 backdrop-blur-xl">
         <div className="marquee-track flex w-max items-center gap-10 whitespace-nowrap text-xs font-bold tracking-[.2em] text-white/60">
           {[0, 1].map((group) => (
             <span key={group} className="flex items-center gap-10">
@@ -142,7 +142,7 @@ export default function Hero() {
 
       <button
         onClick={() => scrollTo("hakkimizda")}
-        className="absolute bottom-24 right-4 z-20 hidden items-center gap-2 text-xs font-semibold uppercase tracking-[.22em] text-white/45 transition hover:text-white md:flex"
+        className="absolute bottom-24 right-4 z-20 hidden items-center gap-2 text-xs font-semibold uppercase tracking-[.22em] text-white/[0.45] transition hover:text-white md:flex"
       >
         {copy.scroll}
         <ArrowDown size={16} className="animate-bounce" />
