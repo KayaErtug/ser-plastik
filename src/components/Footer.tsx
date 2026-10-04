@@ -41,8 +41,8 @@ export default function Footer() {
 
   const productNames =
     language === "en"
-      ? ["Plastic Bags", "Transparent Packaging", "Industrial Packaging", "Courier Packaging", "Custom Production", "Recycled Products"]
-      : ["Naylon Torbalar", "Şeffaf Ambalaj", "Endüstriyel Ambalaj", "Kargo Poşetleri", "Özel Üretim", "Geri Dönüşüm Ürünleri"];
+      ? ["Courier Bags", "Industrial Packaging", "Plastic Bags", "Garbage Bags", "Transparent Packaging", "Under-Aggregate PE Sheet"]
+      : ["Kargo Poşetleri", "Endüstriyel Ambalaj", "Naylon Torbalar", "Çöp Torbaları", "Jelatin Ambalaj", "Mıcıraltı Naylon Örtü"];
 
   const links = [
     ["anasayfa", copy.home],
