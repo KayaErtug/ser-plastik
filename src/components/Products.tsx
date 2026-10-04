@@ -133,7 +133,7 @@ export default function Products() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#031126] via-[#071c3b]/40 to-transparent transition duration-500 group-hover:via-[#071c3b]/25" />
 
-                <div className="absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/12 text-white backdrop-blur-xl">
+                <div className="absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.12] text-white backdrop-blur-xl">
                   <Icon size={23} />
                 </div>
 
@@ -142,7 +142,7 @@ export default function Products() {
                     0{index + 1}
                   </span>
                   <h3 className="text-2xl font-black tracking-[-.025em] text-white">{item.title}</h3>
-                  <p className="mt-3 max-w-sm leading-6 text-white/68">{item.text}</p>
+                  <p className="mt-3 max-w-sm leading-6 text-white/[0.68]">{item.text}</p>
 
                   <button
                     onClick={() => document.getElementById("teklif")?.scrollIntoView({ behavior: "smooth" })}
