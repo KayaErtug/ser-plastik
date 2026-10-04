@@ -17,6 +17,8 @@ export default function Hero() {
       marquee:
         "ÖZEL ÜRETİM • BASKILI POŞET • KARGO AMBALAJI • ENDÜSTRİYEL AMBALAJ • HIZLI TEKLİF • DENİZLİ'DEN ÜRETİM",
       scroll: "Keşfet",
+      experience: "20 yıllık üretim deneyimi",
+      market: "Yurt içi & yurt dışı",
     },
     en: {
       eyebrow: "Professional packaging production from Denizli",
@@ -30,6 +32,8 @@ export default function Hero() {
       marquee:
         "CUSTOM PRODUCTION • PRINTED BAGS • COURIER PACKAGING • INDUSTRIAL PACKAGING • FAST QUOTATION • MADE IN DENIZLI",
       scroll: "Explore",
+      experience: "20 years of production experience",
+      market: "Domestic & international",
     },
   }[language];
 
@@ -69,7 +73,12 @@ export default function Hero() {
             {copy.description}
           </p>
 
-          <div className="reveal-up-delay-3 mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="reveal-up-delay-3 mt-8 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-[.16em] text-white/65">
+            <span className="rounded-full border border-white/12 bg-white/7 px-4 py-2 backdrop-blur">{copy.experience}</span>
+            <span className="rounded-full border border-white/12 bg-white/7 px-4 py-2 backdrop-blur">{copy.market}</span>
+          </div>
+
+          <div className="reveal-up-delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
               onClick={() => scrollTo("urunler")}
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 font-bold text-[#07234b] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(255,255,255,.18)]"
