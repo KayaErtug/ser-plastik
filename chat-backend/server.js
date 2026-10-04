@@ -199,6 +199,11 @@ app.post("/api/chat", async (req, res) => {
 
 app.post("/api/lead", async (req, res) => {
   const language = req.body?.language === "en" ? "en" : "tr";
+  const honeypot = String(req.body?.website ?? "").trim();
+
+  if (honeypot) {
+    return res.json({ ok: true });
+  }
   const data = {
     name: String(req.body?.name ?? "").trim().slice(0, 120),
     company: String(req.body?.company ?? "").trim().slice(0, 160),
