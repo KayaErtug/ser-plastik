@@ -38,8 +38,11 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Telefon & Faks</h3>
-                  <a href="tel:02583713050" className="text-gray-700 hover:text-[#0D47A1] transition-colors text-lg">
+                  <a href="tel:02583713050" className="block text-gray-700 hover:text-[#0D47A1] transition-colors text-lg">
                     0258 371 30 50
+                  </a>
+                  <a href="tel:+905336667381" className="block text-gray-700 hover:text-[#0D47A1] transition-colors text-lg mt-1">
+                    +90 533 666 73 81
                   </a>
                 </div>
               </div>
