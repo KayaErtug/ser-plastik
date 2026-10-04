@@ -90,6 +90,18 @@ app.post("/api/chat", async (req, res) => {
     }
 
     if (intent === "contact") {
+      const conversationText = [
+        ...history.filter((item) => item.role === "user").map((item) => item.content),
+        message,
+      ].join("\n");
+
+      await captureLeadIfNeeded({
+        timestamp: new Date().toISOString(),
+        intent,
+        sessionId,
+        userMessage: conversationText,
+      });
+
       return res.json({
         reply:
           language === "en"
@@ -104,7 +116,10 @@ app.post("/api/chat", async (req, res) => {
         timestamp: new Date().toISOString(),
         intent,
         sessionId,
-        userMessage: message,
+        userMessage: [
+          ...history.filter((item) => item.role === "user").map((item) => item.content),
+          message,
+        ].join("\n"),
       });
 
       return res.json({
