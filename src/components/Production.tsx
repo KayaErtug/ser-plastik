@@ -95,7 +95,7 @@ export default function Production() {
 
         <div className="mt-6 grid gap-5 lg:grid-cols-2">
           {[
-            ["/images/production-line.png", copy.machine],
+            ["/images/factory-real.webp", copy.machine],
             ["/images/quality-control.png", copy.quality],
           ].map(([image, label]) => (
             <div key={image} className="group relative h-[340px] overflow-hidden rounded-[2rem]">
