@@ -27,12 +27,12 @@ function loadSystemPrompt({ intent } = {}) {
     base = "";
   }
 
-  const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "+90 533 666 7399";
+  const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "+90 533 666 73 81";
   const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
 
   // Dosya içeriğini “system” prompt'a çevirecek kısa bir çerçeve
   const wrapper = `
-Sen Ser Plastik'in resmi AI satış ve müşteri temsilcisisin.
+Sen Mimi'sin; Ser Plastik'in resmi AI satış ve müşteri temsilcisisin.
 
 INTENT: ${intent}
 
@@ -47,7 +47,7 @@ ${base}
   return wrapper;
 }
 
-export async function aiReply(message, intent) {
+export async function aiReply(message, intent, history = []) {
   const openai = getClient();
   if (!openai) throw new Error("AI_DISABLED");
 
@@ -55,9 +55,11 @@ export async function aiReply(message, intent) {
 
   const res = await openai.chat.completions.create({
     model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-    temperature: 0.5,
+    temperature: 0.3,
+    max_tokens: 220,
     messages: [
       { role: "system", content: systemPrompt },
+      ...history.slice(-6),
       { role: "user", content: String(message) },
     ],
   });
