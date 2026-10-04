@@ -51,7 +51,7 @@ export default function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[#06172f]/92 backdrop-blur-xl shadow-[0_18px_50px_rgba(1,14,35,.24)] border-b border-white/10"
+          ? "bg-[#06172f]/[0.92] backdrop-blur-xl shadow-[0_18px_50px_rgba(1,14,35,.24)] border-b border-white/10"
           : "bg-transparent"
       }`}
     >
@@ -69,7 +69,7 @@ export default function Header() {
             <button
               key={id}
               onClick={() => scrollToSection(id)}
-              className="relative text-sm font-semibold tracking-wide text-white/85 transition hover:text-white after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full"
+              className="relative text-sm font-semibold tracking-wide text-white/[0.85] transition hover:text-white after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full"
             >
               {label}
             </button>
@@ -77,7 +77,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <div className="hidden rounded-full border border-white/15 bg-white/10 p-1 backdrop-blur md:flex">
+          <div className="hidden rounded-full border border-white/[0.15] bg-white/10 p-1 backdrop-blur md:flex">
             {(["tr", "en"] as const).map((item) => (
               <button
                 key={item}
@@ -93,7 +93,7 @@ export default function Header() {
 
           <button
             onClick={() => setIsMenuOpen((value) => !value)}
-            className="rounded-full border border-white/15 bg-white/10 p-2.5 text-white backdrop-blur lg:hidden"
+            className="rounded-full border border-white/[0.15] bg-white/10 p-2.5 text-white backdrop-blur lg:hidden"
             aria-label="Menu"
           >
             {isMenuOpen ? <X size={23} /> : <Menu size={23} />}
@@ -102,13 +102,13 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-white/10 bg-[#06172f]/97 px-4 pb-5 pt-3 backdrop-blur-xl lg:hidden">
+        <div className="border-t border-white/10 bg-[#06172f]/[0.97] px-4 pb-5 pt-3 backdrop-blur-xl lg:hidden">
           <nav className="mx-auto grid max-w-7xl gap-1">
             {items.map(([id, label]) => (
               <button
                 key={id}
                 onClick={() => scrollToSection(id)}
-                className="rounded-xl px-4 py-3 text-left font-medium text-white/85 transition hover:bg-white/10 hover:text-white"
+                className="rounded-xl px-4 py-3 text-left font-medium text-white/[0.85] transition hover:bg-white/10 hover:text-white"
               >
                 {label}
               </button>
