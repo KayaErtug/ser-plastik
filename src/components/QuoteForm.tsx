@@ -14,6 +14,7 @@ export default function QuoteForm() {
     printing: "no",
     quantity: "",
     message: "",
+    website: "",
   });
 
   const copy = {
@@ -21,7 +22,7 @@ export default function QuoteForm() {
       eyebrow: "Hızlı Teklif",
       title: "İhtiyacınızı anlatın, satış ekibimize ulaştırın.",
       description:
-        "Ürün, ölçü, baskı ve miktar bilgilerinizi paylaşın. Form, hazırlanmış talebinizi doğrudan WhatsApp’a aktarır.",
+        "Ürün, ölçü, baskı ve miktar bilgilerinizi paylaşın. Talebiniz satış ekibine kaydedilir ve ardından WhatsApp görüşmesi açılır.",
       name: "Ad Soyad",
       company: "Firma",
       phone: "Telefon",
@@ -50,7 +51,7 @@ export default function QuoteForm() {
       eyebrow: "Fast Quotation",
       title: "Tell us what you need and send it directly to sales.",
       description:
-        "Share product, dimensions, printing and quantity. The form prepares your request and transfers it directly to WhatsApp.",
+        "Share product, dimensions, printing and quantity. Your request is recorded for the sales team and then WhatsApp opens for direct follow-up.",
       name: "Full Name",
       company: "Company",
       phone: "Phone",
@@ -165,18 +166,28 @@ export default function QuoteForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="rounded-[2rem] border border-slate-200 bg-[#f8fafc] p-5 shadow-[0_30px_80px_rgba(7,28,59,.09)] sm:p-8">
+          <input
+            type="text"
+            name="website"
+            value={formData.website}
+            onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label={copy.name}>
-              <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={inputClass} placeholder={copy.placeholders.name} />
+              <input required autoComplete="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={inputClass} placeholder={copy.placeholders.name} />
             </Field>
             <Field label={copy.company}>
-              <input value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} className={inputClass} placeholder={copy.placeholders.company} />
+              <input autoComplete="organization" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} className={inputClass} placeholder={copy.placeholders.company} />
             </Field>
             <Field label={copy.phone}>
-              <input required type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={inputClass} placeholder={copy.placeholders.phone} />
+              <input required type="tel" autoComplete="tel" inputMode="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={inputClass} placeholder={copy.placeholders.phone} />
             </Field>
             <Field label={copy.email}>
-              <input required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className={inputClass} placeholder={copy.placeholders.email} />
+              <input type="email" autoComplete="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className={inputClass} placeholder={copy.placeholders.email} />
             </Field>
             <Field label={copy.product}>
               <select required value={formData.product} onChange={(e) => setFormData({ ...formData, product: e.target.value })} className={inputClass}>
