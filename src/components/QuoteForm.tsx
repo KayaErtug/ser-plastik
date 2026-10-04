@@ -33,7 +33,7 @@ export default function QuoteForm() {
 *Mesaj:* ${formData.message}
     `.trim();
 
-    const whatsappUrl = `https://wa.me/902583713050?text=${encodeURIComponent(whatsappMessage)}`;
+    const whatsappUrl = `https://wa.me/905336667381?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappUrl, '_blank');
   };
 
