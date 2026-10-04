@@ -36,7 +36,7 @@ export default function Products() {
     },
     {
       icon: Factory,
-      image: "/images/Endüstriyel Ambalaj.png",
+      image: "/images/industrial-packaging-real.webp",
       tr: {
         title: "Endüstriyel Ambalaj",
         text: "Farklı üretim ve paketleme ihtiyaçlarına yönelik dayanıklı endüstriyel ambalaj çözümleri.",
