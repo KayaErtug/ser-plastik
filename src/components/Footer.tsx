@@ -116,9 +116,9 @@ export default function Footer() {
         <div className="flex flex-col gap-4 pt-7 text-xs text-white/[0.45] sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Ser Üretim Plastik Sanayi Limited Şirketi. {copy.rights}</p>
           <div className="flex flex-wrap gap-5">
-            <span>{copy.privacy}</span>
+            <button onClick={() => scrollTo("privacy")} className="transition hover:text-white">{copy.privacy}</button>
+            <button onClick={() => scrollTo("privacy")} className="transition hover:text-white">{copy.kvkk}</button>
             <span>{copy.terms}</span>
-            <span>{copy.kvkk}</span>
           </div>
         </div>
       </div>
