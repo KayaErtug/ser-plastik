@@ -8,6 +8,7 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Chatbot from "./components/Chatbot";
 import MobileActionBar from "./components/MobileActionBar";
+import FAQ from "./components/FAQ";
 import { LanguageProvider } from "./LanguageContext";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Products />
           <Production />
           <QuoteForm />
+          <FAQ />
           <Contact />
         </main>
         <Footer />
