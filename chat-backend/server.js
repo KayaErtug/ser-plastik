@@ -49,7 +49,8 @@ app.get("/health", (req, res) => {
 
 app.post("/api/chat", async (req, res) => {
   const message = String(req.body?.message ?? "").trim();
-  if (!message) return res.status(400).json({ reply: "Mesaj boş olamaz." });
+  const language = req.body?.language === "en" ? "en" : "tr";
+  if (!message) return res.status(400).json({ reply: language === "en" ? "Message cannot be empty." : "Mesaj boş olamaz." });
 
   const intent = detectIntent(message);
 
@@ -63,7 +64,9 @@ app.post("/api/chat", async (req, res) => {
   if (count > MAX_CHAT_MESSAGES) {
     return res.json({
       reply:
-        `Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
+        language === "en"
+          ? `Mimi is designed for short conversations. For sales follow-up, please continue on WhatsApp: ${WHATSAPP_NUMBER}`
+          : `Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
       limitReached: true,
     });
   }
@@ -80,9 +83,9 @@ app.post("/api/chat", async (req, res) => {
     if (intent === "contact") {
       return res.json({
         reply:
-          `İletişim bilgilerimiz:\n` +
-          `• WhatsApp: ${WHATSAPP_NUMBER}\n` +
-          `• Fabrika/İşyeri: ${FACTORY_PHONE}`,
+          language === "en"
+            ? `Contact details:\n• WhatsApp: ${WHATSAPP_NUMBER}\n• Factory/Office: ${FACTORY_PHONE}`
+            : `İletişim bilgilerimiz:\n• WhatsApp: ${WHATSAPP_NUMBER}\n• Fabrika/İşyeri: ${FACTORY_PHONE}`,
       });
     }
 
@@ -97,8 +100,9 @@ app.post("/api/chat", async (req, res) => {
 
       return res.json({
         reply:
-          `WhatsApp hattımız: ${WHATSAPP_NUMBER}\n` +
-          `Hızlı teklif için buradan yazabilirsiniz.`,
+          language === "en"
+            ? `WhatsApp: ${WHATSAPP_NUMBER}\nYou can send your quotation request directly here.`
+            : `WhatsApp hattımız: ${WHATSAPP_NUMBER}\nHızlı teklif için buradan yazabilirsiniz.`,
       });
     }
 
@@ -119,7 +123,9 @@ app.post("/api/chat", async (req, res) => {
     console.error("CHAT_ERROR:", err?.message || err);
 
     const fallback =
-      `Şu anda bağlantı sağlanamadı. Hızlı iletişim için WhatsApp: ${WHATSAPP_NUMBER}`;
+      language === "en"
+        ? `Connection is temporarily unavailable. For quick contact, WhatsApp: ${WHATSAPP_NUMBER}`
+        : `Şu anda bağlantı sağlanamadı. Hızlı iletişim için WhatsApp: ${WHATSAPP_NUMBER}`;
 
     // Hata anında bile: intent sales/whatsapp ise lead mail deneyelim
     try {
