@@ -1,0 +1,61 @@
+name: SER Plastik CI
+
+on:
+  push:
+    branches:
+      - main
+      - premium-mimi-v1
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: chat-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: chat-backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Syntax check
+        run: |
+          node --check server.js
+          node --check leads.js
+          node --check mailer.js
+          node --check intents/intentDetector.js
+          node --check ai/openai.js
