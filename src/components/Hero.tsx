@@ -1,53 +1,117 @@
+import { ArrowDown, ArrowRight, MessageCircleMore } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
+
 export default function Hero() {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const { language } = useLanguage();
+
+  const copy = {
+    tr: {
+      eyebrow: "1990'lardan bugüne üretim kültürü",
+      title: "Ambalajı yalnız üretmiyoruz.",
+      accent: "Markanızı taşıyan çözümler tasarlıyoruz.",
+      description:
+        "Ser Plastik; perakende, e-ticaret ve endüstriyel kullanım için güvenilir, özelleştirilebilir plastik ambalaj çözümleri sunar.",
+      products: "Ürünleri İncele",
+      quote: "Teklif Al",
+      mimi: "Mimi ile konuş",
+      marquee:
+        "ÖZEL ÜRETİM • BASKILI POŞET • KARGO AMBALAJI • ENDÜSTRİYEL AMBALAJ • HIZLI TEKLİF • DENİZLİ'DEN ÜRETİM",
+      scroll: "Keşfet",
+    },
+    en: {
+      eyebrow: "A manufacturing culture built over decades",
+      title: "We do more than manufacture packaging.",
+      accent: "We create solutions that carry your brand.",
+      description:
+        "Ser Plastik delivers reliable, customizable plastic packaging solutions for retail, e-commerce and industrial applications.",
+      products: "Explore Products",
+      quote: "Request Quote",
+      mimi: "Talk to Mimi",
+      marquee:
+        "CUSTOM PRODUCTION • PRINTED BAGS • COURIER PACKAGING • INDUSTRIAL PACKAGING • FAST QUOTATION • MADE IN DENIZLI",
+      scroll: "Explore",
+    },
+  }[language];
+
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section id="anasayfa" className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0D47A1] to-[#2E75D4] opacity-90 z-10"></div>
+    <section id="anasayfa" className="relative min-h-[100svh] overflow-hidden bg-[#031126] text-white">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover opacity-55"
+      >
+        <source src="/images/background videosu.mp4" type="video/mp4" />
+      </video>
 
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/images/background videosu.mp4" type="video/mp4" />
-        </video>
-      </div>
+      <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(2,13,31,.96)_0%,rgba(3,26,59,.86)_45%,rgba(3,17,38,.48)_100%)]" />
+      <div className="absolute inset-0 premium-grid opacity-25" />
+      <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-blue-500/20 blur-[120px]" />
+      <div className="absolute -right-36 bottom-0 h-[30rem] w-[30rem] rounded-full bg-cyan-300/10 blur-[140px]" />
 
-      <div className="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <img src="/logo.png" alt="Ser Plastik Logo" className="h-28 sm:h-36 w-auto mx-auto mb-8 drop-shadow-2xl" />
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 pb-28 pt-28 sm:px-6 lg:px-8">
+        <div className="max-w-5xl">
+          <div className="reveal-up mb-6 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-white/75 backdrop-blur-xl">
+            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,.8)]" />
+            {copy.eyebrow}
+          </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-          Endüstriyel Plastik Ambalaj Üretiminde Güvenilir Çözüm Ortağınız
-        </h1>
+          <h1 className="reveal-up-delay max-w-5xl text-5xl font-black leading-[.98] tracking-[-.045em] sm:text-6xl lg:text-8xl">
+            {copy.title}
+            <span className="mt-3 block text-gradient-premium">{copy.accent}</span>
+          </h1>
 
-        <p className="text-xl sm:text-2xl text-white/95 mb-10 max-w-3xl mx-auto leading-relaxed">
-          Ser Plastik; naylon torba, jelatin, kargo poşeti ve endüstriyel ambalaj çözümlerinde 15+ yıllık tecrübesiyle hizmet vermektedir.
-        </p>
+          <p className="reveal-up-delay-2 mt-8 max-w-2xl text-lg leading-8 text-white/72 sm:text-xl">
+            {copy.description}
+          </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button
-            onClick={() => scrollToSection('urunler')}
-            className="bg-white text-[#0D47A1] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl w-full sm:w-auto"
-          >
-            Ürünlerimizi İncele
-          </button>
-          <button
-            onClick={() => scrollToSection('teklif')}
-            className="bg-[#D32F2F] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#b71c1c] transition-all transform hover:scale-105 shadow-xl w-full sm:w-auto"
-          >
-            Teklif Al
-          </button>
+          <div className="reveal-up-delay-3 mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <button
+              onClick={() => scrollTo("urunler")}
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 font-bold text-[#07234b] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(255,255,255,.18)]"
+            >
+              {copy.products}
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </button>
+            <button
+              onClick={() => scrollTo("teklif")}
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3.5 font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-white/16"
+            >
+              {copy.quote}
+            </button>
+            <button
+              onClick={() => document.querySelector<HTMLButtonElement>('[aria-label="Mimi - Ser Plastik AI Satış Asistanı"]')?.click()}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-6 py-3.5 font-bold text-cyan-50 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-cyan-300/15"
+            >
+              <MessageCircleMore size={18} />
+              {copy.mimi}
+            </button>
+          </div>
         </div>
       </div>
+
+      <div className="absolute inset-x-0 bottom-0 z-20 overflow-hidden border-y border-white/10 bg-[#071c3b]/78 py-4 backdrop-blur-xl">
+        <div className="marquee-track flex w-max items-center gap-10 whitespace-nowrap text-xs font-bold tracking-[.2em] text-white/60">
+          {[0, 1].map((group) => (
+            <span key={group} className="flex items-center gap-10">
+              {copy.marquee}
+              <span className="text-cyan-300">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <button
+        onClick={() => scrollTo("hakkimizda")}
+        className="absolute bottom-24 right-4 z-20 hidden items-center gap-2 text-xs font-semibold uppercase tracking-[.22em] text-white/45 transition hover:text-white md:flex"
+      >
+        {copy.scroll}
+        <ArrowDown size={16} className="animate-bounce" />
+      </button>
     </section>
   );
 }
