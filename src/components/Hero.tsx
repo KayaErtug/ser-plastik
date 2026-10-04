@@ -1,8 +1,26 @@
+import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight, MessageCircleMore } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
 export default function Hero() {
   const { language } = useLanguage();
+  const [showVideo, setShowVideo] = useState(false);
+
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const sync = () => setShowVideo(desktop.matches && !reducedMotion.matches);
+    sync();
+
+    desktop.addEventListener?.("change", sync);
+    reducedMotion.addEventListener?.("change", sync);
+
+    return () => {
+      desktop.removeEventListener?.("change", sync);
+      reducedMotion.removeEventListener?.("change", sync);
+    };
+  }, []);
 
   const copy = {
     tr: {
@@ -42,17 +60,23 @@ export default function Hero() {
 
   return (
     <section id="anasayfa" className="relative min-h-[100svh] overflow-hidden bg-[#031126] text-white">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster="/images/production-line.png"
-        className="absolute inset-0 h-full w-full object-cover opacity-55"
-      >
-        <source src="/images/background videosu.mp4" type="video/mp4" />
-      </video>
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-55"
+        style={{ backgroundImage: 'url("/images/production-line.png")' }}
+      />
+      {showVideo && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/images/production-line.png"
+          className="absolute inset-0 h-full w-full object-cover opacity-55"
+        >
+          <source src="/images/background videosu.mp4" type="video/mp4" />
+        </video>
+      )}
 
       <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(2,13,31,.96)_0%,rgba(3,26,59,.86)_45%,rgba(3,17,38,.48)_100%)]" />
       <div className="absolute inset-0 premium-grid opacity-25" />
