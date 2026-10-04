@@ -68,7 +68,7 @@ export default function About() {
           <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-blue-500/[0.15] via-cyan-300/5 to-transparent blur-2xl" />
           <div className="group relative overflow-hidden rounded-[2.2rem] border border-white/70 bg-[#071c3b] shadow-[0_35px_90px_rgba(7,28,59,.2)]">
             <img
-              src="/images/Hakkımızda.png"
+              src="/images/factory-real.webp"
               alt="Ser Plastik production"
               className="h-[520px] w-full object-cover transition duration-1000 group-hover:scale-105"
             />
