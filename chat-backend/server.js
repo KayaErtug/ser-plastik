@@ -7,6 +7,7 @@ import crypto from "crypto";
 import { aiReply } from "./ai/openai.js";
 import { detectIntent } from "./intents/intentDetector.js";
 import { captureLeadIfNeeded } from "./leads.js";
+import { sendLeadEmail } from "./mailer.js";
 
 const app = express();
 
@@ -191,6 +192,68 @@ app.post("/api/chat", async (req, res) => {
     }
 
     return res.json({ reply: fallback });
+  }
+});
+
+app.post("/api/lead", async (req, res) => {
+  const language = req.body?.language === "en" ? "en" : "tr";
+  const data = {
+    name: String(req.body?.name ?? "").trim().slice(0, 120),
+    company: String(req.body?.company ?? "").trim().slice(0, 160),
+    phone: String(req.body?.phone ?? "").trim().slice(0, 80),
+    email: String(req.body?.email ?? "").trim().slice(0, 160),
+    product: String(req.body?.product ?? "").trim().slice(0, 160),
+    size: String(req.body?.size ?? "").trim().slice(0, 160),
+    printing: String(req.body?.printing ?? "").trim().slice(0, 40),
+    quantity: String(req.body?.quantity ?? "").trim().slice(0, 120),
+    message: String(req.body?.message ?? "").trim().slice(0, 1200),
+  };
+
+  if (!data.name || !data.product || !data.quantity || (!data.phone && !data.email)) {
+    return res.status(400).json({
+      ok: false,
+      error: "INVALID_LEAD",
+      message:
+        language === "en"
+          ? "Name, product, quantity and at least one contact detail are required."
+          : "Ad, ürün, miktar ve en az bir iletişim bilgisi zorunludur.",
+    });
+  }
+
+  const to = process.env.LEAD_EMAIL_TO;
+  if (!to) {
+    return res.status(503).json({ ok: false, error: "LEAD_EMAIL_NOT_CONFIGURED" });
+  }
+
+  const mailText = `Yeni Web Teklif Talebi
+Tarih: ${new Date().toISOString()}
+Dil: ${language.toUpperCase()}
+
+Ad Soyad: ${data.name}
+Firma: ${data.company || "-"}
+Telefon: ${data.phone || "-"}
+E-posta: ${data.email || "-"}
+
+Ürün: ${data.product}
+Ölçü / Mikron: ${data.size || "-"}
+Baskı: ${data.printing || "-"}
+Miktar: ${data.quantity}
+
+Not:
+${data.message || "-"}
+`;
+
+  try {
+    await sendLeadEmail({
+      to,
+      subject: `Ser Plastik Web Teklif | ${data.company || data.name} | ${data.product}`,
+      text: mailText,
+    });
+
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error("FORM_LEAD_EMAIL_ERROR:", error?.message || error);
+    return res.status(500).json({ ok: false, error: "LEAD_EMAIL_FAILED" });
   }
 });
 
