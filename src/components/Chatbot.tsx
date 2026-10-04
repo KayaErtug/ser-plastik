@@ -39,6 +39,7 @@ export default function Chatbot() {
       placeholder: "Mesajınızı yazın...",
       send: "Gönder",
       close: "Kapat",
+      privacy: "İletişim bilgilerinizi paylaşırsanız yalnızca talebinize dönüş yapılması için satış ekibine iletilir.",
       fallback: "Şu anda bağlantı sağlanamadı. WhatsApp üzerinden bizimle iletişime geçebilirsiniz.",
       noReply: "Yanıt alınamadı.",
       limit: "Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
@@ -51,6 +52,7 @@ export default function Chatbot() {
       placeholder: "Type your message...",
       send: "Send",
       close: "Close",
+      privacy: "If you share contact details, they are forwarded to the sales team only for follow-up on your request.",
       fallback: "Connection is temporarily unavailable. Please contact us on WhatsApp.",
       noReply: "No response received.",
       limit: "Mimi is designed for short conversations. You can continue your request with our sales team on WhatsApp.",
@@ -238,6 +240,7 @@ export default function Chatbot() {
             <Send size={18} />
           </button>
         </div>
+        <p className="mt-2 text-[10px] leading-4 text-slate-400">{ui.privacy}</p>
       </div>
     </div>
   );
