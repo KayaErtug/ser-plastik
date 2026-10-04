@@ -15,6 +15,11 @@ const WHATSAPP_NUMBER = "+90 533 666 73 81";
 const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
 const MAX_CHAT_MESSAGES = Number(process.env.MAX_CHAT_MESSAGES || 8);
 const sessionMessageCounts = new Map();
+const requestBuckets = new Map();
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT = 25;
+
+app.set("trust proxy", 1);
 
 // CORS: sadece izinli origin'ler
 const allowedOrigins = String(
@@ -40,7 +45,28 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "64kb" }));
+
+app.use("/api", (req, res, next) => {
+  const key = String(req.ip || req.socket?.remoteAddress || "unknown");
+  const now = Date.now();
+  const bucket = requestBuckets.get(key);
+
+  if (!bucket || now - bucket.startedAt > RATE_WINDOW_MS) {
+    requestBuckets.set(key, { startedAt: now, count: 1 });
+    return next();
+  }
+
+  bucket.count += 1;
+  if (bucket.count > RATE_LIMIT) {
+    return res.status(429).json({
+      error: "RATE_LIMIT",
+      reply: "Çok fazla istek gönderildi. Lütfen kısa bir süre sonra tekrar deneyin.",
+    });
+  }
+
+  return next();
+});
 
 // Sağlık kontrolü
 app.get("/health", (req, res) => {
@@ -48,7 +74,7 @@ app.get("/health", (req, res) => {
 });
 
 app.post("/api/chat", async (req, res) => {
-  const message = String(req.body?.message ?? "").trim();
+  const message = String(req.body?.message ?? "").trim().slice(0, 600);
   const language = req.body?.language === "en" ? "en" : "tr";
   if (!message) return res.status(400).json({ reply: language === "en" ? "Message cannot be empty." : "Mesaj boş olamaz." });
 
