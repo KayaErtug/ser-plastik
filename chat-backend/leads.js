@@ -9,8 +9,37 @@ function extractContact(text = "") {
   return { email, phone };
 }
 
-function isLeadIntent(intent) {
-  return intent === "sales" || intent === "whatsapp";
+function hasSalesSignal(text = "") {
+  const value = String(text).toLowerCase();
+  return [
+    "fiyat",
+    "teklif",
+    "sipariş",
+    "kaç para",
+    "termin",
+    "üretim süresi",
+    "minimum",
+    "moq",
+    "adet",
+    "kg",
+    "kilo",
+    "ton",
+    "price",
+    "quote",
+    "quotation",
+    "offer",
+    "order",
+    "purchase",
+    "lead time",
+    "delivery time",
+    "quantity",
+    "pcs",
+    "pieces",
+  ].some((term) => value.includes(term));
+}
+
+function isQualifiedLead(intent, text) {
+  return intent === "sales" || intent === "whatsapp" || hasSalesSignal(text);
 }
 
 export async function captureLeadIfNeeded({
@@ -20,12 +49,19 @@ export async function captureLeadIfNeeded({
   userMessage,
   aiReply = "",
 }) {
-  if (!isLeadIntent(intent)) return { captured: false, emailed: false };
   if (emailedSessions.has(sessionId)) return { captured: true, emailed: false };
 
   const { email, phone } = extractContact(userMessage);
   if (!email && !phone) {
-    return { captured: true, emailed: false, waitingForContact: true };
+    return {
+      captured: isQualifiedLead(intent, userMessage),
+      emailed: false,
+      waitingForContact: isQualifiedLead(intent, userMessage),
+    };
+  }
+
+  if (!isQualifiedLead(intent, userMessage)) {
+    return { captured: false, emailed: false };
   }
 
   const to = process.env.LEAD_EMAIL_TO;
