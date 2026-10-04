@@ -64,11 +64,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/45">{copy.products}</h3>
+            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/[0.45]">{copy.products}</h3>
             <ul className="mt-5 space-y-3">
               {productNames.map((item) => (
                 <li key={item}>
-                  <button onClick={() => scrollTo("urunler")} className="text-left text-sm text-white/65 transition hover:text-white">
+                  <button onClick={() => scrollTo("urunler")} className="text-left text-sm text-white/[0.65] transition hover:text-white">
                     {item}
                   </button>
                 </li>
@@ -77,11 +77,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/45">{copy.links}</h3>
+            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/[0.45]">{copy.links}</h3>
             <ul className="mt-5 space-y-3">
               {links.map(([id, label]) => (
                 <li key={id}>
-                  <button onClick={() => scrollTo(id)} className="text-left text-sm text-white/65 transition hover:text-white">
+                  <button onClick={() => scrollTo(id)} className="text-left text-sm text-white/[0.65] transition hover:text-white">
                     {label}
                   </button>
                 </li>
@@ -90,8 +90,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/45">{copy.contact}</h3>
-            <div className="mt-5 space-y-4 text-sm text-white/65">
+            <h3 className="text-sm font-black uppercase tracking-[.18em] text-white/[0.45]">{copy.contact}</h3>
+            <div className="mt-5 space-y-4 text-sm text-white/[0.65]">
               <p>Hacıeyüplü Mah. 3101 Sokak No: 27/1<br />Merkezefendi / Denizli / Türkiye</p>
               <a href="tel:02583713050" className="flex items-center gap-2 transition hover:text-white">
                 <Phone size={15} /> 0258 371 30 50
@@ -113,7 +113,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 pt-7 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 pt-7 text-xs text-white/[0.45] sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Ser Üretim Plastik Sanayi Limited Şirketi. {copy.rights}</p>
           <div className="flex flex-wrap gap-5">
             <span>{copy.privacy}</span>
