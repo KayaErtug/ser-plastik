@@ -116,7 +116,7 @@ export default function Contact() {
 
           <div className="min-h-[560px] overflow-hidden rounded-[2rem] border border-white bg-white shadow-[0_30px_80px_rgba(7,28,59,.12)]">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.345678901234!2d29.027979!3d37.824011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ5JzI2LjQiTiAyOcKwMDEnNDAuNyJF!5e0!3m2!1str!2str!4v1703780000000!5m2!1str!2str"
+              src="https://www.google.com/maps?q=Hac%C4%B1ey%C3%BCpl%C3%BC%20Mah.%203101%20Sokak%20No%3A%2027%2F1%20Merkezefendi%20Denizli%20T%C3%BCrkiye&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0, minHeight: 560 }}
