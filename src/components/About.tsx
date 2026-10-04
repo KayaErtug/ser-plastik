@@ -9,10 +9,10 @@ export default function About() {
       eyebrow: "Ser Plastik",
       title: "Üretim gücü, sade iletişim, uzun vadeli iş ortaklığı.",
       lead:
-        "Denizli merkezli üretim yapımızla perakende, e-ticaret ve endüstriyel kullanım için plastik ambalaj çözümleri geliştiriyoruz.",
+        "Ser Üretim Plastik, plastik ambalaj sektöründeki 20 yıllık üretim deneyimini modern üretim anlayışı ve müşteri odaklı hizmet yaklaşımıyla birleştirerek yurt içi ve yurt dışındaki müşterilerine özel ambalaj çözümleri sunar.",
       body:
-        "Standart ürün tedariğinin yanında; ölçü, kalınlık, baskı ve kullanım şartlarına göre özel üretim taleplerini de satış ekibimizle birlikte değerlendiriyoruz.",
-      stat1: "Yerel üretim",
+        "Standart ürünlerle sınırlı kalmadan; ihtiyaç, ürün özelliği ve kullanım alanına göre özel ölçü, baskı ve tasarımlarda üretim gerçekleştirir. Her siparişi uzun vadeli bir iş ortaklığının parçası olarak değerlendirir.",
+      stat1: "20 yıllık deneyim",
       stat2: "Özel üretim",
       stat3: "B2B çözüm",
       stat4: "Hızlı teklif",
@@ -21,10 +21,10 @@ export default function About() {
       eyebrow: "Ser Plastik",
       title: "Manufacturing strength, clear communication, long-term partnership.",
       lead:
-        "From our Denizli-based operation, we develop plastic packaging solutions for retail, e-commerce and industrial applications.",
+        "Ser Üretim Plastik combines 20 years of plastic packaging production experience with modern manufacturing and a customer-focused service approach, delivering tailored packaging solutions to domestic and international customers.",
       body:
-        "In addition to standard supply, our sales team evaluates custom production requests based on dimensions, thickness, print and application requirements.",
-      stat1: "Local production",
+        "Beyond standard products, the company manufactures custom sizes, prints and designs according to product requirements and application needs, treating each order as part of a long-term business partnership.",
+      stat1: "20 years experience",
       stat2: "Custom production",
       stat3: "B2B solutions",
       stat4: "Fast quotation",
