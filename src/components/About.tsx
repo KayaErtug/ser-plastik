@@ -65,15 +65,15 @@ export default function About() {
         </div>
 
         <div className="relative">
-          <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-blue-500/15 via-cyan-300/5 to-transparent blur-2xl" />
+          <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-blue-500/[0.15] via-cyan-300/5 to-transparent blur-2xl" />
           <div className="group relative overflow-hidden rounded-[2.2rem] border border-white/70 bg-[#071c3b] shadow-[0_35px_90px_rgba(7,28,59,.2)]">
             <img
               src="/images/Hakkımızda.png"
               alt="Ser Plastik production"
               className="h-[520px] w-full object-cover transition duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#031126]/85 via-transparent to-transparent" />
-            <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/15 bg-[#06172f]/70 p-5 text-white backdrop-blur-xl">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#031126]/[0.85] via-transparent to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/[0.15] bg-[#06172f]/70 p-5 text-white backdrop-blur-xl">
               <p className="text-xs font-bold uppercase tracking-[.18em] text-cyan-200/80">
                 {language === "tr" ? "Denizli • Türkiye" : "Denizli • Türkiye"}
               </p>
