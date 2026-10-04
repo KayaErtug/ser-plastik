@@ -14,6 +14,30 @@ on:
       - main
 
 jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Block prohibited former-partner phone number
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RInE '533[[:space:]-]*666[[:space:]-]*73[[:space:]-]*99|905336667399' . \
+            --exclude-dir=.git \
+            --exclude='package-lock.json'; then
+            echo "ERROR: prohibited phone number found in repository content."
+            exit 1
+          fi
+
+      - name: Verify approved mobile number is wired
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -RIlE '905336667381|\+90 533 666 73 81' src chat-backend public >/dev/null
+
   frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 10
