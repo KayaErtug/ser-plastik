@@ -25,7 +25,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if grep -RInE '533[[:space:]-]*666[[:space:]-]*73[[:space:]-]*99|905336667399' . \
+          OLD_A="533"
+          OLD_B="666"
+          OLD_C="73"
+          OLD_D="99"
+          OLD_COMPACT="90${OLD_A}${OLD_B}${OLD_C}${OLD_D}"
+          OLD_SPACED="${OLD_A}[[:space:]-]*${OLD_B}[[:space:]-]*${OLD_C}[[:space:]-]*${OLD_D}"
+          if grep -RInE "${OLD_SPACED}|${OLD_COMPACT}" . \
             --exclude-dir=.git \
             --exclude='package-lock.json'; then
             echo "ERROR: prohibited phone number found in repository content."
