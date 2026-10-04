@@ -17,6 +17,7 @@ const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
 const MAX_CHAT_MESSAGES = Number(process.env.MAX_CHAT_MESSAGES || 8);
 const sessionMessageCounts = new Map();
 const requestBuckets = new Map();
+const SESSION_TTL_MS = 2 * 60 * 60 * 1000;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 25;
 
@@ -85,8 +86,9 @@ app.post("/api/chat", async (req, res) => {
     String(req.headers["x-session-id"] || "").trim() ||
     (crypto.randomUUID?.() ?? crypto.randomBytes(16).toString("hex"));
 
-  const count = (sessionMessageCounts.get(sessionId) || 0) + 1;
-  sessionMessageCounts.set(sessionId, count);
+  const previousSession = sessionMessageCounts.get(sessionId);
+  const count = (previousSession?.count || 0) + 1;
+  sessionMessageCounts.set(sessionId, { count, lastSeen: Date.now() });
 
   if (count > MAX_CHAT_MESSAGES) {
     return res.json({
@@ -158,7 +160,7 @@ app.post("/api/chat", async (req, res) => {
     }
 
     // Normal akış: AI yanıtı
-    const reply = await aiReply(message, intent, history);
+    const reply = await aiReply(message, intent, history, language);
 
     // Lead: sadece sales / whatsapp intentlerinde (whatsapp yukarıda)
     await captureLeadIfNeeded({
@@ -261,6 +263,18 @@ ${data.message || "-"}
 app.post("/api/send-transcript", (req, res) => {
   return res.status(410).json({ error: "Bu endpoint kaldırıldı." });
 });
+
+setInterval(() => {
+  const now = Date.now();
+
+  for (const [key, bucket] of requestBuckets) {
+    if (now - bucket.startedAt > RATE_WINDOW_MS * 2) requestBuckets.delete(key);
+  }
+
+  for (const [key, session] of sessionMessageCounts) {
+    if (now - session.lastSeen > SESSION_TTL_MS) sessionMessageCounts.delete(key);
+  }
+}, 30 * 60 * 1000).unref();
 
 const PORT = Number(process.env.PORT || 3001);
 app.listen(PORT, () => {
