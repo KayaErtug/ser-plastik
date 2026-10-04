@@ -11,7 +11,7 @@ import { captureLeadIfNeeded } from "./leads.js";
 const app = express();
 
 // ---- Config (ENV öncelikli) ----
-const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "+90 533 666 73 81";
+const WHATSAPP_NUMBER = "+90 533 666 73 81";
 const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
 const MAX_CHAT_MESSAGES = Number(process.env.MAX_CHAT_MESSAGES || 8);
 const sessionMessageCounts = new Map();
