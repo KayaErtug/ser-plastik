@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
 export default function Footer() {
@@ -61,14 +61,6 @@ export default function Footer() {
           <div>
             <img src="/logo.png" alt="Ser Plastik" className="h-16 w-auto" />
             <p className="mt-5 max-w-sm leading-7 text-white/60">{copy.description}</p>
-            <div className="mt-6 flex gap-3">
-              <a href="#" className="rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label="Instagram">
-                <Instagram size={18} />
-              </a>
-              <a href="#" className="rounded-full border border-white/10 bg-white/5 p-3 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label="LinkedIn">
-                <Linkedin size={18} />
-              </a>
-            </div>
           </div>
 
           <div>
@@ -124,9 +116,9 @@ export default function Footer() {
         <div className="flex flex-col gap-4 pt-7 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Ser Üretim Plastik Sanayi Limited Şirketi. {copy.rights}</p>
           <div className="flex flex-wrap gap-5">
-            <a href="#" className="transition hover:text-white">{copy.privacy}</a>
-            <a href="#" className="transition hover:text-white">{copy.terms}</a>
-            <a href="#" className="transition hover:text-white">{copy.kvkk}</a>
+            <span>{copy.privacy}</span>
+            <span>{copy.terms}</span>
+            <span>{copy.kvkk}</span>
           </div>
         </div>
       </div>
