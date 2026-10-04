@@ -1,19 +1,15 @@
-// chat-backend/leads.js
 import { sendLeadEmail, formatMailError } from "./mailer.js";
 
+const emailedSessions = new Set();
+
 function extractContact(text = "") {
-  const t = String(text);
-
-  const email =
-    t.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || "";
-
-  const phone = t.match(/(\+?\d[\d\s().-]{8,}\d)/)?.[0] || "";
-
+  const value = String(text);
+  const email = value.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || "";
+  const phone = value.match(/(\+?\d[\d\s().-]{8,}\d)/)?.[0] || "";
   return { email, phone };
 }
 
 function isLeadIntent(intent) {
-  // Sadece satış sinyali + WhatsApp intentinde lead maili
   return intent === "sales" || intent === "whatsapp";
 }
 
@@ -25,6 +21,12 @@ export async function captureLeadIfNeeded({
   aiReply = "",
 }) {
   if (!isLeadIntent(intent)) return { captured: false, emailed: false };
+  if (emailedSessions.has(sessionId)) return { captured: true, emailed: false };
+
+  const { email, phone } = extractContact(userMessage);
+  if (!email && !phone) {
+    return { captured: true, emailed: false, waitingForContact: true };
+  }
 
   const to = process.env.LEAD_EMAIL_TO;
   if (!to) {
@@ -32,20 +34,18 @@ export async function captureLeadIfNeeded({
     return { captured: true, emailed: false };
   }
 
-  const { email, phone } = extractContact(userMessage);
-
-  const mailText = `Yeni Lead ✅
+  const mailText = `Yeni Ser Plastik Lead
 Tarih: ${timestamp}
 Intent: ${intent}
 Session: ${sessionId}
 
-Kullanıcı Mesajı:
+Ziyaretçi Konuşma Özeti / Mesajları:
 ${userMessage}
 
-AI Cevabı:
+Mimi Son Cevabı:
 ${aiReply || "-"}
 
-Tespit edilen:
+Tespit Edilen İletişim:
 E-posta: ${email || "-"}
 Telefon: ${phone || "-"}
 `;
@@ -53,13 +53,14 @@ Telefon: ${phone || "-"}
   try {
     await sendLeadEmail({
       to,
-      subject: `Ser Plastik Lead: ${intent} | ${phone || email || "iletişim yok"}`,
+      subject: `Ser Plastik Lead | ${phone || email}`,
       text: mailText,
     });
 
+    emailedSessions.add(sessionId);
     return { captured: true, emailed: true };
-  } catch (e) {
-    console.error("LEAD_EMAIL_ERROR:", formatMailError(e));
+  } catch (error) {
+    console.error("LEAD_EMAIL_ERROR:", formatMailError(error));
     return { captured: true, emailed: false };
   }
 }
