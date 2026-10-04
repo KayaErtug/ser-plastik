@@ -47,6 +47,8 @@ export default function Hero() {
         loop
         muted
         playsInline
+        preload="metadata"
+        poster="/images/production-line.png"
         className="absolute inset-0 h-full w-full object-cover opacity-55"
       >
         <source src="/images/background videosu.mp4" type="video/mp4" />
@@ -57,14 +59,14 @@ export default function Hero() {
       <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-blue-500/20 blur-[120px]" />
       <div className="absolute -right-36 bottom-0 h-[30rem] w-[30rem] rounded-full bg-cyan-300/10 blur-[140px]" />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 pb-28 pt-28 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl items-center px-4 pb-32 pt-24 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
         <div className="max-w-5xl">
           <div className="reveal-up mb-6 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-white/75 backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,.8)]" />
             {copy.eyebrow}
           </div>
 
-          <h1 className="reveal-up-delay max-w-5xl text-5xl font-black leading-[.98] tracking-[-.045em] sm:text-6xl lg:text-8xl">
+          <h1 className="reveal-up-delay max-w-5xl text-[2.65rem] font-black leading-[.98] tracking-[-.045em] sm:text-6xl lg:text-8xl">
             {copy.title}
             <span className="mt-3 block text-gradient-premium">{copy.accent}</span>
           </h1>
