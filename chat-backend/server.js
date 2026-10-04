@@ -80,6 +80,15 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     // İletişim / WhatsApp intentlerinde deterministik cevap (AI'ye bırakmıyoruz)
+    if (intent === "website") {
+      return res.json({
+        reply:
+          language === "en"
+            ? "ser-plastik.com is Ser Üretim Plastik’s official corporate website. The company has 20 years of plastic packaging production experience and serves domestic and international customers with courier bags, industrial packaging, plastic bags, garbage bags, transparent packaging and custom solutions. You can review products, request a quotation, contact sales on WhatsApp, or ask Mimi for help."
+            : "ser-plastik.com, Ser Üretim Plastik’in resmi kurumsal web sitesidir. Firma plastik ambalaj sektöründe 20 yıllık üretim deneyimine sahiptir; kargo poşetleri, endüstriyel ambalaj, naylon torbalar, çöp torbaları, jelatin ambalaj ve özel çözümlerle yurt içi ve yurt dışındaki müşterilerine hizmet verir. Siteden ürünleri inceleyebilir, teklif talebi oluşturabilir, WhatsApp üzerinden satış ekibine ulaşabilir veya Mimi’den destek alabilirsiniz.",
+      });
+    }
+
     if (intent === "contact") {
       return res.json({
         reply:
