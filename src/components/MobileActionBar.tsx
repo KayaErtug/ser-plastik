@@ -9,7 +9,7 @@ export default function MobileActionBar() {
 
   return (
     <div className="fixed inset-x-3 bottom-3 z-40 md:hidden">
-      <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/15 bg-[#06172f]/92 p-2 shadow-[0_20px_55px_rgba(3,17,38,.38)] backdrop-blur-xl">
+      <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/[0.15] bg-[#06172f]/[0.92] p-2 shadow-[0_20px_55px_rgba(3,17,38,.38)] backdrop-blur-xl">
         <button
           onClick={() => document.getElementById("teklif")?.scrollIntoView({ behavior: "smooth" })}
           className="flex items-center justify-center gap-2 rounded-xl bg-white px-3 py-3 text-sm font-black text-[#071c3b]"
