@@ -163,7 +163,7 @@ export default function Chatbot() {
   }
 
   return (
-    <div className="fixed bottom-20 right-3 z-50 flex h-[min(610px,calc(100svh-6rem))] sm:bottom-6 sm:right-6 w-[390px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.6rem] border border-white/15 bg-white shadow-[0_30px_90px_rgba(3,17,38,.35)] sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-20 right-3 z-50 flex h-[min(610px,calc(100svh-6rem))] w-[390px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.6rem] border border-white/15 bg-white shadow-[0_30px_90px_rgba(3,17,38,.35)] sm:bottom-6 sm:right-6">
       <div className="flex items-center justify-between bg-gradient-to-r from-[#06172f] to-[#0D47A1] p-4 text-white">
         <div>
           <h3 className="text-lg font-black">Mimi</h3>
