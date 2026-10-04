@@ -6,7 +6,7 @@ export default function Hero() {
 
   const copy = {
     tr: {
-      eyebrow: "1990'lardan bugüne üretim kültürü",
+      eyebrow: "Denizli'den profesyonel ambalaj üretimi",
       title: "Ambalajı yalnız üretmiyoruz.",
       accent: "Markanızı taşıyan çözümler tasarlıyoruz.",
       description:
@@ -19,7 +19,7 @@ export default function Hero() {
       scroll: "Keşfet",
     },
     en: {
-      eyebrow: "A manufacturing culture built over decades",
+      eyebrow: "Professional packaging production from Denizli",
       title: "We do more than manufacture packaging.",
       accent: "We create solutions that carry your brand.",
       description:
