@@ -108,8 +108,12 @@ jobs:
             ["what is your email address", "contact"],
             ["ser-plastik.com nedir", "website"],
             ["what is this website", "website"],
+            ["this website", "website"],
+            ["shipping bag", "product"],
+            ["high quantity order", "sales"],
             ["merhaba", "greeting"],
             ["hello", "greeting"],
+            ["hi", "greeting"],
           ];
 
           for (const [message, expected] of cases) {
