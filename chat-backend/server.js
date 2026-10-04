@@ -11,8 +11,10 @@ import { captureLeadIfNeeded } from "./leads.js";
 const app = express();
 
 // ---- Config (ENV öncelikli) ----
-const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "+90 533 666 7399";
+const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "+90 533 666 73 81";
 const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
+const MAX_CHAT_MESSAGES = Number(process.env.MAX_CHAT_MESSAGES || 8);
+const sessionMessageCounts = new Map();
 
 // CORS: sadece izinli origin'ler
 const allowedOrigins = String(
@@ -55,6 +57,24 @@ app.post("/api/chat", async (req, res) => {
     String(req.headers["x-session-id"] || "").trim() ||
     (crypto.randomUUID?.() ?? crypto.randomBytes(16).toString("hex"));
 
+  const count = (sessionMessageCounts.get(sessionId) || 0) + 1;
+  sessionMessageCounts.set(sessionId, count);
+
+  if (count > MAX_CHAT_MESSAGES) {
+    return res.json({
+      reply:
+        `Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
+      limitReached: true,
+    });
+  }
+
+  const history = Array.isArray(req.body?.history)
+    ? req.body.history.slice(-6).map((item) => ({
+        role: item?.role === "assistant" ? "assistant" : "user",
+        content: String(item?.content ?? "").slice(0, 1200),
+      }))
+    : [];
+
   try {
     // İletişim / WhatsApp intentlerinde deterministik cevap (AI'ye bırakmıyoruz)
     if (intent === "contact") {
@@ -83,14 +103,14 @@ app.post("/api/chat", async (req, res) => {
     }
 
     // Normal akış: AI yanıtı
-    const reply = await aiReply(message, intent);
+    const reply = await aiReply(message, intent, history);
 
     // Lead: sadece sales / whatsapp intentlerinde (whatsapp yukarıda)
     await captureLeadIfNeeded({
       timestamp: new Date().toISOString(),
       intent,
       sessionId,
-      userMessage: message,
+      userMessage: [...history.filter((item) => item.role === "user").map((item) => item.content), message].join("\n"),
       aiReply: reply,
     });
 
