@@ -1,4 +1,4 @@
-import { ArrowUpRight, Factory, Grid3x3, Package, Recycle, ShoppingBag, Truck } from "lucide-react";
+import { Factory, Package, ShoppingBag, Trash2, Truck, Layers3 } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
 export default function Products() {
@@ -7,43 +7,31 @@ export default function Products() {
   const copy = {
     tr: {
       eyebrow: "Ürün Grupları",
-      title: "Her kullanım için doğru ambalaj.",
+      title: "Farklı kullanım alanları için esnek ambalaj çözümleri.",
       description:
-        "Standart ürünlerden özel baskılı üretime kadar, markanızın ve operasyonunuzun ihtiyacına göre çözüm geliştiriyoruz.",
-      details: "Detaylı teklif al",
+        "Kargo poşetlerinden endüstriyel ambalaja, naylon torbalardan mıcıraltı örtülere kadar farklı ihtiyaçlara yönelik üretim yapıyoruz.",
+      details: "Teklif al",
     },
     en: {
       eyebrow: "Product Range",
-      title: "The right packaging for every application.",
+      title: "Flexible packaging solutions for different applications.",
       description:
-        "From standard products to custom printed production, we build solutions around your brand and operational needs.",
-      details: "Request a detailed quote",
+        "From courier bags and industrial packaging to plastic bags and under-aggregate polyethylene sheets, we manufacture for a wide range of needs.",
+      details: "Request quote",
     },
   }[language];
 
   const products = [
     {
-      icon: ShoppingBag,
-      image: "/images/Naylon Torbalar  Poşetler.png",
+      icon: Truck,
+      image: "/images/Kargo E-Ticaret Ambalajları.png",
       tr: {
-        title: "Naylon Torbalar & Poşetler",
-        text: "Market, mağaza, atlet, vestiyer ve özel ölçülü baskılı/baskısız çözümler.",
+        title: "Kargo Poşetleri",
+        text: "E-ticaret ve sevkiyat operasyonları için güvenlik bantlı, baskılı veya baskısız kargo poşetleri.",
       },
       en: {
-        title: "Plastic Bags & Carrier Bags",
-        text: "Retail, market, vest, garment and custom-size printed or unprinted solutions.",
-      },
-    },
-    {
-      icon: Package,
-      image: "/images/Jelatin Şeffaf Ambalaj.png",
-      tr: {
-        title: "Şeffaf Ambalaj",
-        text: "PP/PE şeffaf torba, fanlı-fansız ambalaj ve tekstil/gıda uygulamaları.",
-      },
-      en: {
-        title: "Transparent Packaging",
-        text: "PP/PE transparent bags, gusseted packaging and textile/food applications.",
+        title: "Courier Bags",
+        text: "Security-sealed, printed or unprinted courier bags for e-commerce and shipping operations.",
       },
     },
     {
@@ -51,47 +39,59 @@ export default function Products() {
       image: "/images/Endüstriyel Ambalaj.png",
       tr: {
         title: "Endüstriyel Ambalaj",
-        text: "Streç film, shrink naylon, palet örtüsü ve ağır kullanım ambalajları.",
+        text: "Farklı üretim ve paketleme ihtiyaçlarına yönelik dayanıklı endüstriyel ambalaj çözümleri.",
       },
       en: {
         title: "Industrial Packaging",
-        text: "Stretch film, shrink film, pallet covers and heavy-duty packaging solutions.",
+        text: "Durable industrial packaging solutions for different production and packing requirements.",
       },
     },
     {
-      icon: Truck,
-      image: "/images/Kargo E-Ticaret Ambalajları.png",
+      icon: ShoppingBag,
+      image: "/images/Naylon Torbalar  Poşetler.png",
       tr: {
-        title: "Kargo & E-Ticaret",
-        text: "Güvenlik bantlı, baskılı ve operasyonunuza özel kargo poşetleri.",
+        title: "Naylon Torbalar",
+        text: "Baskılı, baskısız, takviyeli ve farklı kullanım alanlarına göre özel ölçülü naylon torba üretimi.",
       },
       en: {
-        title: "Courier & E-Commerce",
-        text: "Security-sealed, printed and operation-specific courier mailer solutions.",
+        title: "Plastic Bags",
+        text: "Printed, unprinted, reinforced and custom-sized plastic bags for different applications.",
       },
     },
     {
-      icon: Recycle,
+      icon: Trash2,
       image: "/images/Geri Dönüşüm Ürünleri.png",
       tr: {
-        title: "Geri Dönüşüm Ürünleri",
-        text: "Geri dönüştürülmüş hammadde seçenekleri ve atık yönetimi ürünleri.",
+        title: "Çöp Torbaları",
+        text: "Evsel, ticari ve farklı kullanım alanlarına yönelik çeşitli ölçü ve dayanım seçenekleri.",
       },
       en: {
-        title: "Recycled Products",
-        text: "Recycled-material options and packaging solutions for waste management.",
+        title: "Garbage Bags",
+        text: "Multiple size and strength options for household, commercial and other applications.",
       },
     },
     {
-      icon: Grid3x3,
-      image: "/images/Özel Üretim Esnek Ambalajlar.png",
+      icon: Package,
+      image: "/images/Jelatin Şeffaf Ambalaj.png",
       tr: {
-        title: "Özel Üretim",
-        text: "Ölçü, kalınlık, baskı ve kullanım alanına göre geliştirilen özel çözümler.",
+        title: "Jelatin Ambalaj",
+        text: "Şeffaf sunum ve koruma gereken ürünler için farklı ölçülerde jelatin ambalaj çözümleri.",
       },
       en: {
-        title: "Custom Production",
-        text: "Purpose-built solutions tailored by dimensions, thickness, print and application.",
+        title: "Transparent Packaging",
+        text: "Transparent packaging solutions in different sizes for products requiring visibility and protection.",
+      },
+    },
+    {
+      icon: Layers3,
+      image: "/images/Diğer Ürünler.png",
+      tr: {
+        title: "Mıcıraltı Naylon Örtü",
+        text: "İnşaat ve zemin uygulamalarında kullanım için farklı ölçü ve kalınlıklarda naylon örtü çözümleri.",
+      },
+      en: {
+        title: "Under-Aggregate PE Sheet",
+        text: "Polyethylene sheet solutions in different dimensions and thicknesses for construction and ground applications.",
       },
     },
   ];
@@ -121,7 +121,7 @@ export default function Products() {
 
             return (
               <article
-                key={product.image}
+                key={item.title}
                 className="premium-product-card group relative min-h-[430px] overflow-hidden rounded-[2rem] bg-[#071c3b]"
                 style={{ animationDelay: `${index * 70}ms` }}
               >
@@ -149,7 +149,6 @@ export default function Products() {
                     className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white transition group-hover:text-cyan-200"
                   >
                     {copy.details}
-                    <ArrowUpRight size={17} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                   </button>
                 </div>
               </article>
