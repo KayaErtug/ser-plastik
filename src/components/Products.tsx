@@ -25,6 +25,7 @@ export default function Products() {
     {
       icon: Truck,
       image: "/images/Kargo E-Ticaret Ambalajları.png",
+      objectPosition: "center 76%",
       tr: {
         title: "Kargo Poşetleri",
         text: "E-ticaret ve sevkiyat operasyonları için güvenlik bantlı, baskılı veya baskısız kargo poşetleri.",
@@ -37,6 +38,7 @@ export default function Products() {
     {
       icon: Factory,
       image: "/images/industrial-packaging-real.webp",
+      objectPosition: "center center",
       tr: {
         title: "Endüstriyel Ambalaj",
         text: "Farklı üretim ve paketleme ihtiyaçlarına yönelik dayanıklı endüstriyel ambalaj çözümleri.",
@@ -49,6 +51,7 @@ export default function Products() {
     {
       icon: ShoppingBag,
       image: "/images/Naylon Torbalar  Poşetler.png",
+      objectPosition: "center 78%",
       tr: {
         title: "Naylon Torbalar",
         text: "Baskılı, baskısız, takviyeli ve farklı kullanım alanlarına göre özel ölçülü naylon torba üretimi.",
@@ -61,6 +64,7 @@ export default function Products() {
     {
       icon: Trash2,
       image: "/images/Geri Dönüşüm Ürünleri.png",
+      objectPosition: "center 76%",
       tr: {
         title: "Çöp Torbaları",
         text: "Evsel, ticari ve farklı kullanım alanlarına yönelik çeşitli ölçü ve dayanım seçenekleri.",
@@ -73,6 +77,7 @@ export default function Products() {
     {
       icon: Package,
       image: "/images/Jelatin Şeffaf Ambalaj.png",
+      objectPosition: "center 76%",
       tr: {
         title: "Jelatin Ambalaj",
         text: "Şeffaf sunum ve koruma gereken ürünler için farklı ölçülerde jelatin ambalaj çözümleri.",
@@ -85,6 +90,7 @@ export default function Products() {
     {
       icon: Layers3,
       image: "/images/Diğer Ürünler.png",
+      objectPosition: "center 76%",
       tr: {
         title: "Mıcıraltı Naylon Örtü",
         text: "İnşaat ve zemin uygulamalarında kullanım için farklı ölçü ve kalınlıklarda naylon örtü çözümleri.",
@@ -122,14 +128,16 @@ export default function Products() {
             return (
               <article
                 key={item.title}
-                className="premium-product-card group relative min-h-[430px] overflow-hidden rounded-[2rem] bg-[#071c3b]"
+                className="premium-product-card group relative min-h-[390px] overflow-hidden rounded-[2rem] bg-[#071c3b] sm:min-h-[430px]"
                 style={{ animationDelay: `${index * 70}ms` }}
               >
                 <img
                   src={product.image}
                   alt={item.title}
                   loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  style={{ objectPosition: product.objectPosition }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#031126] via-[#071c3b]/40 to-transparent transition duration-500 group-hover:via-[#071c3b]/25" />
 
