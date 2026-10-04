@@ -9,6 +9,14 @@ export function detectIntent(text = "") {
     return "greeting";
   }
 
+  if (
+    ["site", "web sitesi", "website", "ser-plastik.com", "ser plastik sitesi", "bu site", "this site"].some((term) =>
+      t.includes(term)
+    )
+  ) {
+    return "website";
+  }
+
   if (t.includes("whatsapp") || t.includes("wa.me")) {
     return "whatsapp";
   }
