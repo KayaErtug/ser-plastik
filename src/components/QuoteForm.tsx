@@ -77,8 +77,8 @@ export default function QuoteForm() {
 
   const products =
     language === "en"
-      ? ["Plastic Bags", "Transparent Packaging", "Industrial Packaging", "Courier / E-Commerce", "Custom Production", "Recycled Products", "Other"]
-      : ["Naylon Torba / Poşet", "Şeffaf Ambalaj", "Endüstriyel Ambalaj", "Kargo / E-Ticaret", "Özel Üretim", "Geri Dönüşüm Ürünleri", "Diğer"];
+      ? ["Courier Bags", "Industrial Packaging", "Plastic Bags", "Garbage Bags", "Transparent Packaging", "Under-Aggregate PE Sheet", "Other"]
+      : ["Kargo Poşetleri", "Endüstriyel Ambalaj", "Naylon Torbalar", "Çöp Torbaları", "Jelatin Ambalaj", "Mıcıraltı Naylon Örtü", "Diğer"];
 
   const inputClass =
     "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-800 outline-none transition focus:border-[#0D47A1] focus:ring-4 focus:ring-blue-100";
