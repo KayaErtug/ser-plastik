@@ -59,7 +59,7 @@ export default function Production() {
   return (
     <section id="uretim" className="relative overflow-hidden bg-[#071c3b] py-24 text-white sm:py-32">
       <div className="absolute inset-0 premium-grid opacity-20" />
-      <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/15 blur-[120px]" />
+      <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/[0.15] blur-[120px]" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[.85fr_1.15fr] lg:items-end">
@@ -67,7 +67,7 @@ export default function Production() {
             <span className="section-kicker !text-cyan-200">{copy.eyebrow}</span>
             <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-[-.04em] sm:text-6xl">{copy.title}</h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-white/65 lg:justify-self-end">{copy.description}</p>
+          <p className="max-w-2xl text-lg leading-8 text-white/[0.65] lg:justify-self-end">{copy.description}</p>
         </div>
 
         <div className="mt-14 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -87,7 +87,7 @@ export default function Production() {
                   <span className="text-3xl font-black text-white/10 transition group-hover:text-white/20">0{index + 1}</span>
                 </div>
                 <h3 className="mt-7 text-xl font-bold">{title}</h3>
-                <p className="mt-3 leading-7 text-white/58">{description}</p>
+                <p className="mt-3 leading-7 text-white/[0.58]">{description}</p>
               </article>
             );
           })}
