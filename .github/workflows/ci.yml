@@ -1,5 +1,9 @@
 name: SER Plastik CI
 
+concurrency:
+  group: ser-plastik-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
