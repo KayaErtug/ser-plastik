@@ -15,7 +15,7 @@ function getClient() {
   return client;
 }
 
-function loadSystemPrompt({ intent } = {}) {
+function loadSystemPrompt({ intent, language } = {}) {
   // Prompt'u dosyadan okumak: düzenleme kolaylığı
   const promptPath =
     process.env.AI_CONTEXT_PATH || path.join(process.cwd(), "ai", "ai_context.md");
@@ -35,6 +35,7 @@ function loadSystemPrompt({ intent } = {}) {
 Sen Mimi'sin; Ser Plastik'in resmi AI satış ve müşteri temsilcisisin.
 
 INTENT: ${intent}
+SITE LANGUAGE: ${language === "en" ? "English" : "Turkish"}
 
 SABİT İLETİŞİM:
 - WhatsApp: ${WHATSAPP_NUMBER}
@@ -47,11 +48,11 @@ ${base}
   return wrapper;
 }
 
-export async function aiReply(message, intent, history = []) {
+export async function aiReply(message, intent, history = [], language = "tr") {
   const openai = getClient();
   if (!openai) throw new Error("AI_DISABLED");
 
-  const systemPrompt = loadSystemPrompt({ intent });
+  const systemPrompt = loadSystemPrompt({ intent, language });
 
   const res = await openai.chat.completions.create({
     model: process.env.OPENAI_MODEL || "gpt-4o-mini",
