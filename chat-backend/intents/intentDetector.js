@@ -1,11 +1,20 @@
 export function detectIntent(text = "") {
   const t = String(text).toLowerCase();
 
-  if (
-    ["merhaba", "selam", "iyi günler", "iyi akşamlar", "günaydın", "hello", "hi", "good morning", "good afternoon", "good evening"].some((term) =>
-      t.includes(term)
-    )
-  ) {
+  const greetingPatterns = [
+    /(^|\s)merhaba($|\s|[!,.?])/,
+    /(^|\s)selam($|\s|[!,.?])/,
+    /iyi günler/,
+    /iyi akşamlar/,
+    /günaydın/,
+    /(^|\s)hello($|\s|[!,.?])/,
+    /(^|\s)hi($|\s|[!,.?])/,
+    /good morning/,
+    /good afternoon/,
+    /good evening/,
+  ];
+
+  if (greetingPatterns.some((pattern) => pattern.test(t))) {
     return "greeting";
   }
 
