@@ -62,7 +62,7 @@ export default function Hero() {
     <section id="anasayfa" className="relative min-h-[100svh] overflow-hidden bg-[#031126] text-white">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-55"
-        style={{ backgroundImage: 'url("/images/production-line.png")' }}
+        style={{ backgroundImage: 'url("/images/factory-real.webp")' }}
       />
       {showVideo && (
         <video
@@ -71,7 +71,7 @@ export default function Hero() {
           muted
           playsInline
           preload="metadata"
-          poster="/images/production-line.png"
+          poster="/images/factory-real.webp"
           className="absolute inset-0 h-full w-full object-cover opacity-55"
         >
           <source src="/images/background videosu.mp4" type="video/mp4" />
