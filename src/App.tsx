@@ -7,6 +7,7 @@ import QuoteForm from "./components/QuoteForm";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Chatbot from "./components/Chatbot";
+import MobileActionBar from "./components/MobileActionBar";
 import { LanguageProvider } from "./LanguageContext";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Contact />
         </main>
         <Footer />
+        <MobileActionBar />
         <Chatbot />
       </div>
     </LanguageProvider>
