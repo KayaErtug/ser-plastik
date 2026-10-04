@@ -35,6 +35,7 @@ export default function QuoteForm() {
       yes: "Evet",
       no: "Hayır",
       submit: "WhatsApp ile Teklif Talep Et",
+      privacy: "Gönderdiğiniz iletişim bilgileri yalnızca teklif talebinize dönüş yapılması amacıyla satış ekibine iletilir.",
       placeholders: {
         name: "Adınız ve soyadınız",
         company: "Firma adı",
@@ -63,6 +64,7 @@ export default function QuoteForm() {
       yes: "Yes",
       no: "No",
       submit: "Request Quote on WhatsApp",
+      privacy: "Your contact details are forwarded to the sales team only to follow up on your quotation request.",
       placeholders: {
         name: "Your full name",
         company: "Company name",
@@ -82,6 +84,11 @@ export default function QuoteForm() {
 
   const inputClass =
     "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-800 outline-none transition focus:border-[#0D47A1] focus:ring-4 focus:ring-blue-100";
+
+  const API_URL =
+    (import.meta.env.VITE_API_BASE_URL as string) ||
+    (import.meta.env.VITE_API_URL as string) ||
+    "";
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -118,6 +125,13 @@ export default function QuoteForm() {
             "",
             `*Not:* ${formData.message || "-"}`,
           ];
+
+    fetch(`${API_URL}/api/lead`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...formData, language }),
+      keepalive: true,
+    }).catch(() => {});
 
     window.open(
       `https://wa.me/905336667381?text=${encodeURIComponent(lines.join("\n"))}`,
@@ -197,6 +211,7 @@ export default function QuoteForm() {
             {copy.submit}
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </button>
+          <p className="mt-3 text-xs leading-5 text-slate-500">{copy.privacy}</p>
         </form>
       </div>
     </section>
