@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MessageCircle, X, Send, Phone } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 interface Message {
   text: string;
@@ -9,10 +10,14 @@ interface Message {
 }
 
 export default function Chatbot() {
+  const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
+      text:
+        language === "en"
+          ? "Hello, I’m Mimi. I can help with Ser Plastik products, quotations and order requests."
+          : "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
       isBot: true,
     },
   ]);
@@ -29,13 +34,11 @@ export default function Chatbot() {
   const [showHint, setShowHint] = useState(true);
 
   const quickReplies = useMemo(
-    () => [
-      "Ürünleriniz neler?",
-      "Fiyat / Teklif almak istiyorum",
-      "Üretim kapasiteniz",
-      "İletişim bilgileri",
-    ],
-    []
+    () =>
+      language === "en"
+        ? ["What products do you offer?", "I need a quotation", "Tell me about production", "Contact details"]
+        : ["Ürünleriniz neler?", "Fiyat / Teklif almak istiyorum", "Üretim hakkında bilgi", "İletişim bilgileri"],
+    [language]
   );
 
   // ✅ Doğru env: VITE_API_BASE_URL (ör: https://api.ser-plastik.com)
@@ -69,7 +72,9 @@ export default function Chatbot() {
         ...prev,
         {
           text:
-            "Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
+            language === "en"
+              ? "Mimi is designed for short conversations. You can continue your request with our sales team on WhatsApp."
+              : "Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
           isBot: true,
         },
       ]);
@@ -92,7 +97,7 @@ export default function Chatbot() {
           "Content-Type": "application/json",
           "X-Session-Id": sessionIdRef.current,
         },
-        body: JSON.stringify({ message: text, history }),
+        body: JSON.stringify({ message: text, history, language }),
       });
 
       // 4xx/5xx durumlarında json parse patlamasın diye
@@ -179,7 +184,7 @@ export default function Chatbot() {
             className="chat-fab relative rounded-full p-4 text-white shadow-2xl
                        bg-gradient-to-br from-[#0D47A1] to-[#2E75D4]
                        hover:scale-110 transition will-change-transform"
-            aria-label="Mimi - Ser Plastik AI Satış Asistanı"
+            aria-label="Mimi - {language === "en" ? "Ser Plastik AI Sales Assistant" : "Ser Plastik AI Satış Asistanı"}"
           >
             {/* Ping halkası */}
             <span className="absolute -inset-1 rounded-full bg-[#2E75D4]/30 animate-ping" />
@@ -244,7 +249,7 @@ export default function Chatbot() {
           </div>
         )}
 
-        {loading && <div className="text-xs text-gray-500">Mimi yazıyor...</div>}
+        {loading && <div className="text-xs text-gray-500">{language === "en" ? "Mimi is typing..." : "Mimi yazıyor..."}</div>}
 
         {/* Auto-scroll anchor */}
         <div ref={bottomRef} />
@@ -257,7 +262,7 @@ export default function Chatbot() {
           className="w-full bg-[#25D366] text-white py-2 rounded-lg mb-2 flex items-center justify-center font-semibold"
         >
           <Phone className="mr-2" size={18} />
-          WhatsApp ile İletişim
+          {language === "en" ? "Contact on WhatsApp" : "WhatsApp ile İletişim"}
         </button>
 
         <div className="flex gap-2">
@@ -266,7 +271,7 @@ export default function Chatbot() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Mesajınızı yazın..."
+            placeholder={language === "en" ? "Type your message..." : "Mesajınızı yazın..."}
             className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:border-[#0D47A1] disabled:opacity-60"
             disabled={loading}
           />
@@ -281,7 +286,7 @@ export default function Chatbot() {
         </div>
 
         <div className="mt-2 text-[11px] text-gray-500">
-          Enter: Gönder • (Shift+Enter: alt satır)
+          {language === "en" ? "Enter: Send" : "Enter: Gönder"}
         </div>
       </div>
     </div>
