@@ -12,12 +12,18 @@ export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Merhaba! 🤖 Ser Plastik AI destekli canlı sohbete hoş geldiniz. Size nasıl yardımcı olabilirim?",
+      text: "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
       isBot: true,
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
+  const sessionIdRef = useRef(
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `mimi-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
+  const MAX_USER_MESSAGES = 8;
 
   // İlk giriş tooltip (buton kapalıyken kısa süre göster)
   const [showHint, setShowHint] = useState(true);
@@ -57,6 +63,24 @@ export default function Chatbot() {
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading) return;
 
+    const userMessageCount = messages.filter((message) => !message.isBot).length;
+    if (userMessageCount >= MAX_USER_MESSAGES) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text:
+            "Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
+          isBot: true,
+        },
+      ]);
+      return;
+    }
+
+    const history = messages.slice(-6).map((message) => ({
+      role: message.isBot ? "assistant" : "user",
+      content: message.text,
+    }));
+
     setMessages((prev) => [...prev, { text, isBot: false }]);
     setInputText("");
     setLoading(true);
@@ -64,8 +88,11 @@ export default function Chatbot() {
     try {
       const res = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-Session-Id": sessionIdRef.current,
+        },
+        body: JSON.stringify({ message: text, history }),
       });
 
       // 4xx/5xx durumlarında json parse patlamasın diye
@@ -93,19 +120,7 @@ export default function Chatbot() {
     }
   };
 
-  const sendTranscript = async () => {
-    if (messages.length <= 1) return; // sadece karşılama varsa gönderme
-
-    // Arka planda gönderim
-    fetch(`${API_URL}/api/send-transcript`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages }),
-    }).catch(() => {});
-  };
-
   const handleClose = () => {
-    sendTranscript();
     setIsOpen(false);
   };
 
@@ -153,7 +168,7 @@ export default function Chatbot() {
           {showHint && (
             <div className="absolute -top-14 right-0 mb-2">
               <div className="bg-white text-gray-900 text-sm px-4 py-2 rounded-xl shadow-lg border relative whitespace-nowrap">
-                Hızlı teklif için yazın 👋
+                Mimi'ye sorun
                 <span className="absolute -bottom-2 right-6 w-3 h-3 bg-white border-b border-r rotate-45" />
               </div>
             </div>
@@ -164,7 +179,7 @@ export default function Chatbot() {
             className="chat-fab relative rounded-full p-4 text-white shadow-2xl
                        bg-gradient-to-br from-[#0D47A1] to-[#2E75D4]
                        hover:scale-110 transition will-change-transform"
-            aria-label="AI Destekli Canlı Sohbet"
+            aria-label="Mimi - Ser Plastik AI Satış Asistanı"
           >
             {/* Ping halkası */}
             <span className="absolute -inset-1 rounded-full bg-[#2E75D4]/30 animate-ping" />
@@ -182,8 +197,8 @@ export default function Chatbot() {
       {/* HEADER */}
       <div className="bg-gradient-to-r from-[#0D47A1] to-[#2E75D4] text-white p-4 rounded-t-2xl flex justify-between items-center">
         <div>
-          <h3 className="font-bold">Ser Plastik</h3>
-          <p className="text-xs opacity-80">🤖 AI Destekli Canlı Sohbet</p>
+          <h3 className="font-bold">Mimi</h3>
+          <p className="text-xs opacity-80">Ser Plastik AI Satış Asistanı</p>
         </div>
 
         <button
@@ -229,7 +244,7 @@ export default function Chatbot() {
           </div>
         )}
 
-        {loading && <div className="text-xs text-gray-500">🤖 Yazıyor...</div>}
+        {loading && <div className="text-xs text-gray-500">Mimi yazıyor...</div>}
 
         {/* Auto-scroll anchor */}
         <div ref={bottomRef} />
