@@ -18,7 +18,7 @@ function getClient() {
 function loadSystemPrompt({ intent } = {}) {
   // Prompt'u dosyadan okumak: düzenleme kolaylığı
   const promptPath =
-    process.env.AI_CONTEXT_PATH || path.join(process.cwd(), "ai_context.md");
+    process.env.AI_CONTEXT_PATH || path.join(process.cwd(), "ai", "ai_context.md");
 
   let base = "";
   try {
@@ -27,7 +27,7 @@ function loadSystemPrompt({ intent } = {}) {
     base = "";
   }
 
-  const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "+90 533 666 73 81";
+  const WHATSAPP_NUMBER = "+90 533 666 73 81";
   const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
 
   // Dosya içeriğini “system” prompt'a çevirecek kısa bir çerçeve
