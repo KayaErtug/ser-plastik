@@ -1,76 +1,128 @@
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Languages, Menu, X } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function Header() {
+  const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const copy = {
+    tr: {
+      home: "Ana Sayfa",
+      about: "Hakkımızda",
+      products: "Ürünler",
+      production: "Üretim",
+      quote: "Teklif Al",
+      contact: "İletişim",
+      menu: "Menüyü aç / kapat",
+    },
+    en: {
+      home: "Home",
+      about: "About",
+      products: "Products",
+      production: "Production",
+      quote: "Request Quote",
+      contact: "Contact",
+      menu: "Open / close menu",
+    },
+  }[language];
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setIsMenuOpen(false);
   };
 
+  const items = [
+    ["anasayfa", copy.home],
+    ["hakkimizda", copy.about],
+    ["urunler", copy.products],
+    ["uretim", copy.production],
+    ["teklif", copy.quote],
+    ["iletisim", copy.contact],
+  ];
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <div className="flex items-center">
-            <img src="/logo.png" alt="Ser Plastik Logo" className="h-14 w-auto" />
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-[#06172f]/[0.92] backdrop-blur-xl shadow-[0_18px_50px_rgba(1,14,35,.24)] border-b border-white/10"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <button onClick={() => scrollToSection("anasayfa")} className="group flex items-center" aria-label="Ser Plastik">
+          <img
+            src="/logo.png"
+            alt="Ser Plastik"
+            className="h-12 w-auto drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+          />
+        </button>
+
+        <nav className="hidden items-center gap-7 lg:flex">
+          {items.map(([id, label]) => (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id)}
+              className="relative text-sm font-semibold tracking-wide text-white/[0.85] transition hover:text-white after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-white after:transition-all hover:after:w-full"
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <div className="hidden rounded-full border border-white/[0.15] bg-white/10 p-1 backdrop-blur md:flex">
+            {(["tr", "en"] as const).map((item) => (
+              <button
+                key={item}
+                onClick={() => setLanguage(item)}
+                className={`rounded-full px-3 py-1.5 text-xs font-bold tracking-wider transition ${
+                  language === item ? "bg-white text-[#082652]" : "text-white/70 hover:text-white"
+                }`}
+              >
+                {item.toUpperCase()}
+              </button>
+            ))}
           </div>
 
-          <nav className="hidden md:flex space-x-8">
-            <button onClick={() => scrollToSection('anasayfa')} className="text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Ana Sayfa
-            </button>
-            <button onClick={() => scrollToSection('hakkimizda')} className="text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Hakkımızda
-            </button>
-            <button onClick={() => scrollToSection('urunler')} className="text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Ürünler
-            </button>
-            <button onClick={() => scrollToSection('uretim')} className="text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Üretim
-            </button>
-            <button onClick={() => scrollToSection('teklif')} className="text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Teklif Al
-            </button>
-            <button onClick={() => scrollToSection('iletisim')} className="text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              İletişim
-            </button>
-          </nav>
-
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-gray-700"
+            onClick={() => setIsMenuOpen((value) => !value)}
+            className="rounded-full border border-white/[0.15] bg-white/10 p-2.5 text-white backdrop-blur lg:hidden"
+            aria-label={copy.menu}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation"
           >
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {isMenuOpen ? <X size={23} /> : <Menu size={23} />}
           </button>
         </div>
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <nav className="px-4 py-4 space-y-3">
-            <button onClick={() => scrollToSection('anasayfa')} className="block w-full text-left py-2 text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Ana Sayfa
-            </button>
-            <button onClick={() => scrollToSection('hakkimizda')} className="block w-full text-left py-2 text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Hakkımızda
-            </button>
-            <button onClick={() => scrollToSection('urunler')} className="block w-full text-left py-2 text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Ürünler
-            </button>
-            <button onClick={() => scrollToSection('uretim')} className="block w-full text-left py-2 text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Üretim
-            </button>
-            <button onClick={() => scrollToSection('teklif')} className="block w-full text-left py-2 text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              Teklif Al
-            </button>
-            <button onClick={() => scrollToSection('iletisim')} className="block w-full text-left py-2 text-gray-700 hover:text-[#0D47A1] transition-colors font-medium">
-              İletişim
-            </button>
+        <div id="mobile-navigation" className="border-t border-white/10 bg-[#06172f]/[0.97] px-4 pb-5 pt-3 backdrop-blur-xl lg:hidden">
+          <nav className="mx-auto grid max-w-7xl gap-1">
+            {items.map(([id, label]) => (
+              <button
+                key={id}
+                onClick={() => scrollToSection(id)}
+                className="rounded-xl px-4 py-3 text-left font-medium text-white/[0.85] transition hover:bg-white/10 hover:text-white"
+              >
+                {label}
+              </button>
+            ))}
+            <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-2 text-white">
+              <Languages size={18} />
+              <button onClick={() => setLanguage("tr")} className={language === "tr" ? "font-bold" : "opacity-60"}>TR</button>
+              <span className="opacity-30">/</span>
+              <button onClick={() => setLanguage("en")} className={language === "en" ? "font-bold" : "opacity-60"}>EN</button>
+            </div>
           </nav>
         </div>
       )}

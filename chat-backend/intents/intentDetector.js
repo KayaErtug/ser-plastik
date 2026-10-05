@@ -1,66 +1,96 @@
-// chat-backend/intents/intentDetector.js
-// Tek intent sözlüğü: sales / product / contact / whatsapp / greeting / general
-
 export function detectIntent(text = "") {
   const t = String(text).toLowerCase();
 
-  // Greeting
-  if (
-    t.includes("merhaba") ||
-    t.includes("selam") ||
-    t.includes("iyi günler") ||
-    t.includes("iyi akşamlar") ||
-    t.includes("günaydın")
-  ) {
+  const greetingPatterns = [
+    /(^|\s)merhaba($|\s|[!,.?])/,
+    /(^|\s)selam($|\s|[!,.?])/,
+    /iyi günler/,
+    /iyi akşamlar/,
+    /günaydın/,
+    /(^|\s)hello($|\s|[!,.?])/,
+    /(^|\s)hi($|\s|[!,.?])/,
+    /good morning/,
+    /good afternoon/,
+    /good evening/,
+  ];
+
+  if (greetingPatterns.some((pattern) => pattern.test(t))) {
     return "greeting";
   }
 
-  // WhatsApp / hızlı teklif (kullanıcı özellikle WhatsApp'ı soruyor)
+  if (
+    ["site", "web sitesi", "website", "ser-plastik.com", "ser plastik sitesi", "bu site", "this site"].some((term) =>
+      t.includes(term)
+    )
+  ) {
+    return "website";
+  }
+
   if (t.includes("whatsapp") || t.includes("wa.me")) {
     return "whatsapp";
   }
 
-  // Contact info
   if (
-    t.includes("iletişim") ||
-    t.includes("telefon") ||
-    t.includes("numara") ||
-    t.includes("aradım") ||
-    t.includes("adres") ||
-    t.includes("mail")
+    ["iletişim", "telefon", "numara", "aradım", "adres", "mail", "contact", "phone", "number", "address", "email", "e-mail"].some((term) =>
+      t.includes(term)
+    )
   ) {
     return "contact";
   }
 
-  // Sales signals (fiyat/teklif/termin/sipariş)
   if (
-    t.includes("fiyat") ||
-    t.includes("teklif") ||
-    t.includes("kaç para") ||
-    t.includes("fiyatı") ||
-    t.includes("termin") ||
-    t.includes("kaç günde") ||
-    t.includes("kaç gün") ||
-    t.includes("sipariş") ||
-    t.includes("üretim süresi") ||
-    t.includes("minimum") ||
-    t.includes("moq") ||
-    t.includes("ton") ||
-    t.match(/\b\d+\s*(adet|kg|kilo|ton)\b/)
+    [
+      "fiyat",
+      "teklif",
+      "kaç para",
+      "fiyatı",
+      "termin",
+      "kaç günde",
+      "kaç gün",
+      "sipariş",
+      "üretim süresi",
+      "minimum",
+      "moq",
+      "ton",
+      "price",
+      "quote",
+      "quotation",
+      "offer",
+      "order",
+      "purchase",
+      "lead time",
+      "delivery time",
+      "minimum order",
+      "quantity",
+      "pieces",
+      "pcs",
+    ].some((term) => t.includes(term)) ||
+    t.match(/\b\d+\s*(adet|kg|kilo|ton|pcs|pieces|units)\b/)
   ) {
     return "sales";
   }
 
-  // Product info
   if (
-    t.includes("ürün") ||
-    t.includes("poşet") ||
-    t.includes("naylon") ||
-    t.includes("jelatin") ||
-    t.includes("kargo") ||
-    t.includes("ambalaj") ||
-    t.includes("pazar poşeti") ||
-    t.includes("çöp poşeti")
+    [
+      "ürün",
+      "poşet",
+      "naylon",
+      "jelatin",
+      "kargo",
+      "ambalaj",
+      "pazar poşeti",
+      "çöp poşeti",
+      "product",
+      "bag",
+      "plastic bag",
+      "packaging",
+      "courier",
+      "mailer",
+      "transparent",
+      "industrial",
+      "garbage bag",
+      "trash bag",
+    ].some((term) => t.includes(term))
   ) {
     return "product";
   }

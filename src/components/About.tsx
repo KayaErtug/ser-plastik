@@ -1,80 +1,91 @@
-import { Factory, Award, Users, TrendingUp } from 'lucide-react';
+import { Award, Factory, Sparkles, Users } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function About() {
-  const features = [
-    {
-      icon: Factory,
-      title: '15+ Yıllık Tecrübe',
-      description: 'Plastik ambalaj sektöründe deneyim'
+  const { language } = useLanguage();
+
+  const copy = {
+    tr: {
+      eyebrow: "Ser Plastik",
+      title: "Üretim gücü, sade iletişim, uzun vadeli iş ortaklığı.",
+      lead:
+        "Ser Üretim Plastik, plastik ambalaj sektöründeki 20 yıllık üretim deneyimini modern üretim anlayışı ve müşteri odaklı hizmet yaklaşımıyla birleştirerek yurt içi ve yurt dışındaki müşterilerine özel ambalaj çözümleri sunar.",
+      body:
+        "Standart ürünlerle sınırlı kalmadan; ihtiyaç, ürün özelliği ve kullanım alanına göre özel ölçü, baskı ve tasarımlarda üretim gerçekleştirir. Her siparişi uzun vadeli bir iş ortaklığının parçası olarak değerlendirir.",
+      stat1: "20 yıllık deneyim",
+      stat2: "Özel üretim",
+      stat3: "B2B çözüm",
+      stat4: "Hızlı teklif",
     },
-    {
-      icon: Award,
-      title: 'Kalite Güvencesi',
-      description: 'ISO standartlarında üretim ve kalite kontrol'
+    en: {
+      eyebrow: "Ser Plastik",
+      title: "Manufacturing strength, clear communication, long-term partnership.",
+      lead:
+        "Ser Üretim Plastik combines 20 years of plastic packaging production experience with modern manufacturing and a customer-focused service approach, delivering tailored packaging solutions to domestic and international customers.",
+      body:
+        "Beyond standard products, the company manufactures custom sizes, prints and designs according to product requirements and application needs, treating each order as part of a long-term business partnership.",
+      stat1: "20 years experience",
+      stat2: "Custom production",
+      stat3: "B2B solutions",
+      stat4: "Fast quotation",
     },
-    {
-      icon: Users,
-      title: 'Uzman Kadro',
-      description: 'Alanında uzman ve deneyimli çalışma ekibi'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Yüksek Kapasite',
-      description: 'Modern makine parkuru ile büyük ölçekli üretim'
-    }
+  }[language];
+
+  const stats = [
+    { icon: Factory, label: copy.stat1 },
+    { icon: Sparkles, label: copy.stat2 },
+    { icon: Users, label: copy.stat3 },
+    { icon: Award, label: copy.stat4 },
   ];
 
   return (
-    <section id="hakkimizda" className="py-20 bg-gradient-to-b from-white to-[#F4F4F6]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#0D47A1] mb-4">
-            Hakkımızda
+    <section id="hakkimizda" className="relative overflow-hidden bg-white py-24 sm:py-32">
+      <div className="absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-blue-400/10 blur-[100px]" />
+
+      <div className="relative mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
+        <div>
+          <span className="section-kicker">{copy.eyebrow}</span>
+          <h2 className="mt-4 max-w-3xl text-4xl font-black tracking-[-.04em] text-[#071c3b] sm:text-6xl">
+            {copy.title}
           </h2>
-          <div className="w-24 h-1 bg-[#D32F2F] mx-auto mb-6"></div>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            SER ÜRETİM PLASTİK SANAYİ LİMİTED ŞİRKETİ
-          </p>
-        </div>
+          <p className="mt-7 max-w-2xl text-xl leading-9 text-slate-700">{copy.lead}</p>
+          <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500">{copy.body}</p>
 
-        <div className="grid md:grid-cols-2 gap-12 mb-16">
-          <div className="space-y-6 text-center">
-            <h3 className="text-3xl font-bold text-gray-900">Firma Tarihçemiz</h3>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              Ser Plastik, 15 yılı aşkın süredir plastik ambalaj sektöründe öncü bir konumda faaliyet göstermektedir.
-              Denizli merkezli tesisimizde, modern teknoloji ve uzman kadromuzla müşterilerimize en kaliteli hizmeti sunmaktayız.
-            </p>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              Naylon torba, jelatin ambalaj, kargo poşeti ve endüstriyel ambalaj çözümlerinde uzmanlaşmış firmamız,
-              yerli ve uluslararası pazarda güvenilir bir iş ortağı olarak tanınmaktadır.
-            </p>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              Sürekli gelişim ve müşteri memnuniyeti odaklı çalışma prensibimizle, sektörde fark yaratan ürünler üretiyoruz.
-            </p>
-          </div>
-
-          <div className="relative h-96 rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="/images/Hakkımızda.png"
-              alt="Üretim Tesisi"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center"
-            >
-              <div className="bg-gradient-to-br from-[#0D47A1] to-[#2E75D4] w-16 h-16 rounded-lg flex items-center justify-center mb-6 mx-auto">
-                <feature.icon className="text-white" size={32} />
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {stats.map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-white hover:shadow-xl"
+              >
+                <Icon className="mb-4 text-[#0D47A1]" size={24} />
+                <p className="text-sm font-bold leading-5 text-[#071c3b]">{label}</p>
               </div>
-              <h4 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h4>
-              <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-blue-500/[0.15] via-cyan-300/5 to-transparent blur-2xl" />
+          <div className="group relative overflow-hidden rounded-[2.2rem] border border-white/70 bg-[#071c3b] shadow-[0_35px_90px_rgba(7,28,59,.2)]">
+            <img
+              src="/images/factory-real.webp"
+              alt="Ser Plastik production"
+              loading="lazy"
+              decoding="async"
+              className="h-[520px] w-full object-cover transition duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#031126]/[0.85] via-transparent to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/[0.15] bg-[#06172f]/70 p-5 text-white backdrop-blur-xl">
+              <p className="text-xs font-bold uppercase tracking-[.18em] text-cyan-200/80">
+                {language === "tr" ? "Denizli • Türkiye" : "Denizli • Türkiye"}
+              </p>
+              <p className="mt-2 text-lg font-bold">
+                {language === "tr"
+                  ? "Üretimden teslimata kadar tek noktadan ambalaj çözümü."
+                  : "One-point packaging support from production to delivery."}
+              </p>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>

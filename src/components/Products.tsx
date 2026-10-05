@@ -1,141 +1,167 @@
-import {
-  ShoppingBag,
-  Package,
-  Factory,
-  Truck,
-  Recycle,
-  Grid3x3,
-} from "lucide-react";
+import { Factory, Package, ShoppingBag, Trash2, Truck, Layers3 } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function Products() {
+  const { language } = useLanguage();
+
+  const copy = {
+    tr: {
+      eyebrow: "Ürün Grupları",
+      title: "Farklı kullanım alanları için esnek ambalaj çözümleri.",
+      description:
+        "Kargo poşetlerinden endüstriyel ambalaja, naylon torbalardan mıcıraltı örtülere kadar farklı ihtiyaçlara yönelik üretim yapıyoruz.",
+      details: "Teklif al",
+    },
+    en: {
+      eyebrow: "Product Range",
+      title: "Flexible packaging solutions for different applications.",
+      description:
+        "From courier bags and industrial packaging to plastic bags and under-aggregate polyethylene sheets, we manufacture for a wide range of needs.",
+      details: "Request quote",
+    },
+  }[language];
+
   const products = [
     {
-      icon: ShoppingBag,
-      title: "Naylon Torbalar / Poşetler",
-      items: [
-        "Baskılı / baskısız torbalar",
-        "Kendinden yapışkanlı bantlı torbalar",
-        "Market & mağaza poşetleri",
-        "Atlet poşet",
-        "Vestiyer poşet",
-        "Takviyeli tabanlı torbalar",
-        "Rulo çöp poşetleri (küçük–orta–büyük–endüstriyel)",
-      ],
-      image: "/images/Naylon Torbalar  Poşetler.png",
-      // üstteki yazıyı kadraj dışına almak için görseli aşağı kaydırıyoruz
-      objectPosition: "center 78%",
-    },
-    {
-      icon: Package,
-      title: "Jelatin / Şeffaf Ambalaj",
-      items: [
-        "PP poşet",
-        "PE şeffaf torba",
-        "Fanlı / fansız jelatin torbalar",
-        "Gıda ambalaj poşetleri",
-        "Kırtasiye ve tekstil ambalajları",
-      ],
-      image: "/images/Jelatin Şeffaf Ambalaj.png",
-      objectPosition: "center 78%",
+      icon: Truck,
+      image: "/images/Kargo E-Ticaret Ambalajları.png",
+      objectPosition: "center 76%",
+      tr: {
+        title: "Kargo Poşetleri",
+        text: "E-ticaret ve sevkiyat operasyonları için güvenlik bantlı, baskılı veya baskısız kargo poşetleri.",
+      },
+      en: {
+        title: "Courier Bags",
+        text: "Security-sealed, printed or unprinted courier bags for e-commerce and shipping operations.",
+      },
     },
     {
       icon: Factory,
-      title: "Endüstriyel Ambalaj",
-      items: [
-        "Streç film",
-        "Palet örtüsü",
-        "Shrink naylon",
-        "Kolileme & paketleme naylonları",
-        "Endüstriyel çöp torbaları",
-      ],
-      image: "/images/Endüstriyel Ambalaj.png",
-      objectPosition: "center 78%",
+      image: "/images/industrial-packaging-real.webp",
+      objectPosition: "center center",
+      tr: {
+        title: "Endüstriyel Ambalaj",
+        text: "Farklı üretim ve paketleme ihtiyaçlarına yönelik dayanıklı endüstriyel ambalaj çözümleri.",
+      },
+      en: {
+        title: "Industrial Packaging",
+        text: "Durable industrial packaging solutions for different production and packing requirements.",
+      },
     },
     {
-      icon: Truck,
-      title: "Kargo & E-Ticaret Ambalajları",
-      items: [
-        "Kargo poşeti",
-        "Güvenlik bantlı poşet",
-        "Kraft + plastik karışım poşet",
-        "Askı delikli kargo torbaları",
-        "Geri dönüşümlü poşetler",
-      ],
-      image: "/images/Kargo & E-Ticaret Ambalajları.png",
+      icon: ShoppingBag,
+      image: "/images/Naylon Torbalar  Poşetler.png",
       objectPosition: "center 78%",
+      tr: {
+        title: "Naylon Torbalar",
+        text: "Baskılı, baskısız, takviyeli ve farklı kullanım alanlarına göre özel ölçülü naylon torba üretimi.",
+      },
+      en: {
+        title: "Plastic Bags",
+        text: "Printed, unprinted, reinforced and custom-sized plastic bags for different applications.",
+      },
     },
     {
-      icon: Recycle,
-      title: "Geri Dönüşüm Ürünleri",
-      items: [
-        "Geri dönüştürülmüş hammadde poşetleri",
-        "Atık poşetleri",
-        "Doğada çözünebilen ambalaj türleri",
-      ],
+      icon: Trash2,
       image: "/images/Geri Dönüşüm Ürünleri.png",
-      objectPosition: "center 78%",
+      objectPosition: "center 76%",
+      tr: {
+        title: "Çöp Torbaları",
+        text: "Evsel, ticari ve farklı kullanım alanlarına yönelik çeşitli ölçü ve dayanım seçenekleri.",
+      },
+      en: {
+        title: "Garbage Bags",
+        text: "Multiple size and strength options for household, commercial and other applications.",
+      },
     },
     {
-      icon: Grid3x3,
-      title: "Diğer Ürünler",
-      items: [
-        "Plastik masa örtüsü",
-        "Sebze–meyve poşetleri",
-        "Fırın torbaları",
-        "Medikal atık poşetleri",
-      ],
+      icon: Package,
+      image: "/images/Jelatin Şeffaf Ambalaj.png",
+      objectPosition: "center 76%",
+      tr: {
+        title: "Jelatin Ambalaj",
+        text: "Şeffaf sunum ve koruma gereken ürünler için farklı ölçülerde jelatin ambalaj çözümleri.",
+      },
+      en: {
+        title: "Transparent Packaging",
+        text: "Transparent packaging solutions in different sizes for products requiring visibility and protection.",
+      },
+    },
+    {
+      icon: Layers3,
       image: "/images/Diğer Ürünler.png",
-      objectPosition: "center 78%",
+      objectPosition: "center 76%",
+      tr: {
+        title: "Mıcıraltı Naylon Örtü",
+        text: "İnşaat ve zemin uygulamalarında kullanım için farklı ölçü ve kalınlıklarda naylon örtü çözümleri.",
+      },
+      en: {
+        title: "Under-Aggregate PE Sheet",
+        text: "Polyethylene sheet solutions in different dimensions and thicknesses for construction and ground applications.",
+      },
     },
   ];
 
   return (
-    <section id="urunler" className="py-20 bg-[#F8FAFC]">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Ürün Gruplarımız</h2>
-          <p className="text-gray-600">
-            Geniş ürün yelpazemiz ile her sektöre özel ambalaj çözümleri sunuyoruz
+    <section id="urunler" className="relative overflow-hidden bg-[#eef3f9] py-24 sm:py-32">
+      <div className="absolute inset-0 premium-grid opacity-[.04]" />
+      <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-500/10 blur-[110px]" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-14 grid gap-8 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+          <div>
+            <span className="section-kicker">{copy.eyebrow}</span>
+            <h2 className="mt-4 max-w-xl text-4xl font-black tracking-[-.04em] text-[#071c3b] sm:text-6xl">
+              {copy.title}
+            </h2>
+          </div>
+          <p className="max-w-2xl text-lg leading-8 text-slate-600 lg:justify-self-end">
+            {copy.description}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.map((product, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden"
-            >
-              {/* IMAGE */}
-              <div className="relative aspect-video overflow-hidden bg-gray-100">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {products.map((product, index) => {
+            const item = product[language];
+            const Icon = product.icon;
+
+            return (
+              <article
+                key={item.title}
+                className="premium-product-card group relative min-h-[390px] overflow-hidden rounded-[2rem] bg-[#071c3b] sm:min-h-[430px]"
+                style={{ animationDelay: `${index * 70}ms` }}
+              >
                 <img
                   src={product.image}
-                  alt={product.title}
+                  alt={item.title}
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  style={{ objectPosition: product.objectPosition || "center 70%" }}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  style={{ objectPosition: product.objectPosition }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#031126] via-[#071c3b]/40 to-transparent transition duration-500 group-hover:via-[#071c3b]/25" />
 
-                {/* hafif karartı + ikon (yazı yok) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 bg-white/95 p-3 rounded-xl shadow">
-                  <product.icon className="text-[#0D47A1]" size={26} />
+                <div className="absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.12] text-white backdrop-blur-xl">
+                  <Icon size={23} />
                 </div>
-              </div>
 
-              {/* CONTENT */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{product.title}</h3>
-                <ul className="space-y-2">
-                  {product.items.map((item, idx) => (
-                    <li key={idx} className="flex items-start">
-                      <span className="text-[#D32F2F] mr-2 mt-1">▪</span>
-                      <span className="text-gray-700 text-sm">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+                  <span className="mb-3 block text-xs font-bold uppercase tracking-[.2em] text-cyan-200/80">
+                    0{index + 1}
+                  </span>
+                  <h3 className="text-2xl font-black tracking-[-.025em] text-white">{item.title}</h3>
+                  <p className="mt-3 max-w-sm leading-6 text-white/[0.68]">{item.text}</p>
+
+                  <button
+                    onClick={() => document.getElementById("teklif")?.scrollIntoView({ behavior: "smooth" })}
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white transition group-hover:text-cyan-200"
+                  >
+                    {copy.details}
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

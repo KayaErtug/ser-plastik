@@ -1,6 +1,8 @@
 // chat-backend/mailer.js
 import nodemailer from "nodemailer";
 
+let verifiedTransporterPromise = null;
+
 export function buildTransporter() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT || 587);
@@ -28,17 +30,42 @@ export function buildTransporter() {
   });
 }
 
-export async function sendLeadEmail({ to, subject, text }) {
-  const transporter = buildTransporter();
+async function getVerifiedTransporter() {
+  if (!verifiedTransporterPromise) {
+    verifiedTransporterPromise = (async () => {
+      const transporter = buildTransporter();
+      await transporter.verify();
+      return transporter;
+    })().catch((error) => {
+      verifiedTransporterPromise = null;
+      throw error;
+    });
+  }
 
+  return verifiedTransporterPromise;
+}
+
+function sanitizeHeaderValue(value, fallback = "") {
+  return String(value || fallback)
+    .replace(/[\r\n]+/g, " ")
+    .trim()
+    .slice(0, 200);
+}
+
+export async function sendLeadEmail({ to, subject, text }) {
+  const safeTo = sanitizeHeaderValue(to);
+  if (!safeTo) {
+    throw new Error("MAIL_RECIPIENT_NOT_CONFIGURED");
+  }
+
+  const transporter = await getVerifiedTransporter();
   const from = process.env.MAIL_FROM || process.env.SMTP_USER;
-  await transporter.verify();
 
   return transporter.sendMail({
     from,
-    to,
-    subject,
-    text,
+    to: safeTo,
+    subject: sanitizeHeaderValue(subject, "Ser Plastik Lead"),
+    text: String(text || "").slice(0, 20000),
   });
 }
 

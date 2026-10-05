@@ -1,0 +1,129 @@
+name: SER Plastik CI
+
+concurrency:
+  group: ser-plastik-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Block prohibited former-partner phone number
+        shell: bash
+        run: |
+          set -euo pipefail
+          OLD_A="533"
+          OLD_B="666"
+          OLD_C="73"
+          OLD_D="99"
+          OLD_COMPACT="90${OLD_A}${OLD_B}${OLD_C}${OLD_D}"
+          OLD_SPACED="${OLD_A}[[:space:]-]*${OLD_B}[[:space:]-]*${OLD_C}[[:space:]-]*${OLD_D}"
+          if grep -RInE "${OLD_SPACED}|${OLD_COMPACT}" . \
+            --exclude-dir=.git \
+            --exclude='package-lock.json'; then
+            echo "ERROR: prohibited phone number found in repository content."
+            exit 1
+          fi
+
+      - name: Verify approved mobile number is wired
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -RIlE '905336667381|\+90 533 666 73 81' src chat-backend public >/dev/null
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: chat-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: chat-backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Syntax check
+        run: |
+          node --check server.js
+          node --check leads.js
+          node --check mailer.js
+          node --check intents/intentDetector.js
+          node --check ai/openai.js
+
+      - name: Mimi intent behavior checks
+        run: |
+          node --input-type=module <<'NODE'
+          import { detectIntent } from "./intents/intentDetector.js";
+
+          const cases = [
+            ["teklif almak istiyorum", "sales"],
+            ["I need a quotation", "sales"],
+            ["kargo poşeti arıyorum", "product"],
+            ["industrial packaging", "product"],
+            ["telefon numaranız nedir", "contact"],
+            ["what is your email address", "contact"],
+            ["ser-plastik.com nedir", "website"],
+            ["what is this website", "website"],
+            ["this website", "website"],
+            ["shipping bag", "product"],
+            ["high quantity order", "sales"],
+            ["merhaba", "greeting"],
+            ["hello", "greeting"],
+            ["hi", "greeting"],
+          ];
+
+          for (const [message, expected] of cases) {
+            const actual = detectIntent(message);
+            if (actual !== expected) {
+              throw new Error(`Intent mismatch for "${message}": expected ${expected}, got ${actual}`);
+            }
+          }
+
+          console.log(`Mimi intent checks passed: ${cases.length}`);
+          NODE

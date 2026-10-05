@@ -1,7 +1,7 @@
-// src/components/Chatbot.tsx
-
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MessageCircle, X, Send, Phone } from "lucide-react";
+import { MessageCircle, Phone, Send, X } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
+import { postJson } from "../api";
 
 interface Message {
   text: string;
@@ -9,265 +9,239 @@ interface Message {
 }
 
 export default function Chatbot() {
+  const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Merhaba! 🤖 Ser Plastik AI destekli canlı sohbete hoş geldiniz. Size nasıl yardımcı olabilirim?",
+      text:
+        language === "en"
+          ? "Hello, I’m Mimi. I can help with Ser Plastik products, quotations and order requests."
+          : "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
       isBot: true,
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // İlk giriş tooltip (buton kapalıyken kısa süre göster)
   const [showHint, setShowHint] = useState(true);
+  const sessionIdRef = useRef(
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `mimi-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const MAX_USER_MESSAGES = 8;
+
+  const ui = {
+    tr: {
+      hint: "Mimi'ye sorun",
+      subtitle: "Ser Plastik AI Satış Asistanı",
+      typing: "Mimi yazıyor...",
+      whatsapp: "WhatsApp ile İletişim",
+      placeholder: "Mesajınızı yazın...",
+      send: "Gönder",
+      close: "Kapat",
+      privacy: "İletişim bilgilerinizi paylaşırsanız yalnızca talebinize dönüş yapılması için satış ekibine iletilir.",
+      fallback: "Şu anda bağlantı sağlanamadı. WhatsApp üzerinden bizimle iletişime geçebilirsiniz.",
+      noReply: "Yanıt alınamadı.",
+      limit: "Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
+    },
+    en: {
+      hint: "Ask Mimi",
+      subtitle: "Ser Plastik AI Sales Assistant",
+      typing: "Mimi is typing...",
+      whatsapp: "Contact on WhatsApp",
+      placeholder: "Type your message...",
+      send: "Send",
+      close: "Close",
+      privacy: "If you share contact details, they are forwarded to the sales team only for follow-up on your request.",
+      fallback: "Connection is temporarily unavailable. Please contact us on WhatsApp.",
+      noReply: "No response received.",
+      limit: "Mimi is designed for short conversations. You can continue your request with our sales team on WhatsApp.",
+    },
+  }[language];
 
   const quickReplies = useMemo(
-    () => [
-      "Ürünleriniz neler?",
-      "Fiyat / Teklif almak istiyorum",
-      "Üretim kapasiteniz",
-      "İletişim bilgileri",
-    ],
-    []
+    () =>
+      language === "en"
+        ? ["What products do you offer?", "I need a quotation", "Tell me about production", "Contact details"]
+        : ["Ürünleriniz neler?", "Fiyat / Teklif almak istiyorum", "Üretim hakkında bilgi", "İletişim bilgileri"],
+    [language]
   );
 
-  // ✅ Doğru env: VITE_API_BASE_URL (ör: https://api.ser-plastik.com)
-  // Fallback: VITE_API_URL (opsiyonel/eski)
-  const API_URL =
-    (import.meta.env.VITE_API_BASE_URL as string) ||
-    (import.meta.env.VITE_API_URL as string) ||
-    "";
-
-  // Auto-scroll referansı
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
-    // Buton tooltip 4 sn sonra kaybolsun
-    const t = setTimeout(() => setShowHint(false), 4000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setShowHint(false), 4000);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (!isOpen) return;
-    // Yeni mesajlarda otomatik aşağı kaydır
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, loading, isOpen]);
 
+  useEffect(() => {
+    setMessages((current) => {
+      if (current.length !== 1) return current;
+      return [
+        {
+          text:
+            language === "en"
+              ? "Hello, I’m Mimi. I can help with Ser Plastik products, quotations and order requests."
+              : "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
+          isBot: true,
+        },
+      ];
+    });
+  }, [language]);
+
   const sendMessage = async (text: string) => {
     if (!text.trim() || loading) return;
+
+    if (messages.filter((message) => !message.isBot).length >= MAX_USER_MESSAGES) {
+      setMessages((prev) => [...prev, { text: ui.limit, isBot: true }]);
+      return;
+    }
+
+    const history = messages.slice(-6).map((message) => ({
+      role: message.isBot ? "assistant" : "user",
+      content: message.text,
+    }));
 
     setMessages((prev) => [...prev, { text, isBot: false }]);
     setInputText("");
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
-      });
+      const response = await postJson(
+        "/api/chat",
+        { message: text, history, language },
+        { headers: { "X-Session-Id": sessionIdRef.current } }
+      );
 
-      // 4xx/5xx durumlarında json parse patlamasın diye
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        setMessages((prev) => [
+          ...prev,
+          { text: data?.reply ?? ui.fallback, isBot: true },
+        ]);
+        return;
       }
 
-      const data = await res.json();
-
       setMessages((prev) => [
         ...prev,
-        { text: data?.reply ?? "Yanıt alınamadı.", isBot: true },
+        { text: data?.reply ?? ui.noReply, isBot: true },
       ]);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          text:
-            "Şu anda bağlantı sağlanamadı. WhatsApp üzerinden bizimle iletişime geçebilirsiniz.",
-          isBot: true,
-        },
-      ]);
+      setMessages((prev) => [...prev, { text: ui.fallback, isBot: true }]);
     } finally {
       setLoading(false);
     }
   };
 
-  const sendTranscript = async () => {
-    if (messages.length <= 1) return; // sadece karşılama varsa gönderme
-
-    // Arka planda gönderim
-    fetch(`${API_URL}/api/send-transcript`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages }),
-    }).catch(() => {});
-  };
-
-  const handleClose = () => {
-    sendTranscript();
-    setIsOpen(false);
-  };
-
-  const handleWhatsApp = () => {
-    window.open("https://wa.me/905336667381", "_blank");
-  };
-
-  // Enter gönder, Shift+Enter alt satır
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    if (e.shiftKey) return; // input tek satır olduğu için pratikte alt satır yok, ama talebe göre davranış
-    e.preventDefault();
-    sendMessage(inputText);
-  };
-
-  // ✅ Kapalı buton: float + ping + glow + seyrek nudge + tooltip
   if (!isOpen) {
     return (
-      <>
-        <style>{`
-          @keyframes chatFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-6px) scale(1.02); }
-          }
-          @keyframes chatNudge {
-            0%, 92%, 100% { transform: translateY(0) rotate(0deg); }
-            94% { transform: translateY(-2px) rotate(-6deg); }
-            96% { transform: translateY(0) rotate(6deg); }
-            98% { transform: translateY(-1px) rotate(-4deg); }
-          }
-          @keyframes chatGlow {
-            0%, 100% { box-shadow: 0 14px 40px rgba(13,71,161,.35), 0 0 0 rgba(46,117,212,.0); }
-            50% { box-shadow: 0 16px 50px rgba(13,71,161,.45), 0 0 26px rgba(46,117,212,.22); }
-          }
-          .chat-fab {
-            animation:
-              chatFloat 2.2s ease-in-out infinite,
-              chatNudge 14s ease-in-out infinite,
-              chatGlow 2.8s ease-in-out infinite;
-          }
-        `}</style>
-
-        <div className="fixed bottom-6 right-6 z-50">
-          {/* Tooltip (opsiyonel, kısa süre) */}
-          {showHint && (
-            <div className="absolute -top-14 right-0 mb-2">
-              <div className="bg-white text-gray-900 text-sm px-4 py-2 rounded-xl shadow-lg border relative whitespace-nowrap">
-                Hızlı teklif için yazın 👋
-                <span className="absolute -bottom-2 right-6 w-3 h-3 bg-white border-b border-r rotate-45" />
-              </div>
+      <div className="fixed bottom-24 right-4 z-50 sm:bottom-6 sm:right-6">
+        {showHint && (
+          <div className="absolute -top-14 right-0">
+            <div className="relative whitespace-nowrap rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-xl">
+              {ui.hint}
+              <span className="absolute -bottom-2 right-6 h-3 w-3 rotate-45 border-b border-r border-slate-200 bg-white" />
             </div>
-          )}
+          </div>
+        )}
 
-          <button
-            onClick={() => setIsOpen(true)}
-            className="chat-fab relative rounded-full p-4 text-white shadow-2xl
-                       bg-gradient-to-br from-[#0D47A1] to-[#2E75D4]
-                       hover:scale-110 transition will-change-transform"
-            aria-label="AI Destekli Canlı Sohbet"
-          >
-            {/* Ping halkası */}
-            <span className="absolute -inset-1 rounded-full bg-[#2E75D4]/30 animate-ping" />
-            <span className="relative">
-              <MessageCircle size={30} />
-            </span>
-          </button>
-        </div>
-      </>
+        <button
+          id="mimi-chat-trigger"
+          onClick={() => setIsOpen(true)}
+          className="chat-fab relative rounded-full bg-gradient-to-br from-[#0D47A1] to-[#2E75D4] p-4 text-white shadow-2xl transition hover:scale-110"
+          aria-label={`Mimi - ${ui.subtitle}`}
+        >
+          <span className="absolute -inset-1 rounded-full bg-[#2E75D4]/30 animate-ping" />
+          <span className="relative"><MessageCircle size={30} /></span>
+        </button>
+      </div>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl z-50 flex flex-col h-[600px]">
-      {/* HEADER */}
-      <div className="bg-gradient-to-r from-[#0D47A1] to-[#2E75D4] text-white p-4 rounded-t-2xl flex justify-between items-center">
+    <div className="fixed bottom-20 right-3 z-50 flex h-[min(610px,calc(100svh-6rem))] w-[390px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.6rem] border border-white/[0.15] bg-white shadow-[0_30px_90px_rgba(3,17,38,.35)] sm:bottom-6 sm:right-6">
+      <div className="flex items-center justify-between bg-gradient-to-r from-[#06172f] to-[#0D47A1] p-4 text-white">
         <div>
-          <h3 className="font-bold">Ser Plastik</h3>
-          <p className="text-xs opacity-80">🤖 AI Destekli Canlı Sohbet</p>
+          <h3 className="text-lg font-black">Mimi</h3>
+          <p className="text-xs text-white/70">{ui.subtitle}</p>
         </div>
-
-        <button
-          onClick={handleClose}
-          className="hover:bg-white/20 p-1 rounded transition"
-          aria-label="Kapat"
-        >
-          <X size={20} />
+        <button onClick={() => setIsOpen(false)} className="rounded-full p-2 transition hover:bg-white/10" aria-label={ui.close}>
+          <X size={19} />
         </button>
       </div>
 
-      {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F4F4F6]">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.isBot ? "justify-start" : "justify-end"}`}
-          >
+      <div className="flex-1 space-y-3 overflow-y-auto bg-[#f4f7fb] p-4">
+        {messages.map((message, index) => (
+          <div key={index} className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}>
             <div
-              className={`max-w-[80%] p-3 rounded-2xl text-sm whitespace-pre-line ${
-                msg.isBot
-                  ? "bg-white text-gray-800 shadow"
-                  : "bg-gradient-to-r from-[#0D47A1] to-[#2E75D4] text-white"
+              className={`max-w-[82%] whitespace-pre-line rounded-2xl p-3 text-sm leading-6 ${
+                message.isBot
+                  ? "bg-white text-slate-700 shadow-sm"
+                  : "bg-[#0D47A1] text-white"
               }`}
             >
-              {msg.text}
+              {message.text}
             </div>
           </div>
         ))}
 
         {messages.length === 1 && (
           <div className="grid grid-cols-2 gap-2 pt-2">
-            {quickReplies.map((q, i) => (
+            {quickReplies.map((reply) => (
               <button
-                key={i}
-                onClick={() => sendMessage(q)}
-                className="bg-white border text-[#0D47A1] px-3 py-2 rounded-lg text-sm hover:bg-[#0D47A1] hover:text-white transition"
+                key={reply}
+                onClick={() => sendMessage(reply)}
                 disabled={loading}
+                className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left text-xs font-semibold text-[#0D47A1] transition hover:border-blue-200 hover:bg-blue-50"
               >
-                {q}
+                {reply}
               </button>
             ))}
           </div>
         )}
 
-        {loading && <div className="text-xs text-gray-500">🤖 Yazıyor...</div>}
-
-        {/* Auto-scroll anchor */}
+        {loading && <div className="text-xs text-slate-400">{ui.typing}</div>}
         <div ref={bottomRef} />
       </div>
 
-      {/* FOOTER */}
-      <div className="p-3 border-t bg-white rounded-b-2xl">
+      <div className="border-t border-slate-200 bg-white p-3">
         <button
-          onClick={handleWhatsApp}
-          className="w-full bg-[#25D366] text-white py-2 rounded-lg mb-2 flex items-center justify-center font-semibold"
+          onClick={() => window.open("https://wa.me/905336667381", "_blank")}
+          className="mb-2 flex w-full items-center justify-center rounded-xl bg-[#25D366] py-2.5 font-bold text-white transition hover:bg-[#20BA5A]"
         >
-          <Phone className="mr-2" size={18} />
-          WhatsApp ile İletişim
+          <Phone className="mr-2" size={17} />
+          {ui.whatsapp}
         </button>
 
         <div className="flex gap-2">
           <input
-            type="text"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Mesajınızı yazın..."
-            className="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:border-[#0D47A1] disabled:opacity-60"
+            onChange={(event) => setInputText(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage(inputText);
+              }
+            }}
+            placeholder={ui.placeholder}
+            className="min-w-0 flex-1 rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-[#0D47A1]"
             disabled={loading}
           />
           <button
             onClick={() => sendMessage(inputText)}
-            className="bg-[#0D47A1] text-white px-4 rounded-lg disabled:opacity-60"
             disabled={loading || !inputText.trim()}
-            aria-label="Gönder"
+            aria-label={ui.send}
+            className="rounded-xl bg-[#0D47A1] px-4 text-white transition hover:bg-[#082f73] disabled:opacity-40"
           >
             <Send size={18} />
           </button>
         </div>
-
-        <div className="mt-2 text-[11px] text-gray-500">
-          Enter: Gönder • (Shift+Enter: alt satır)
-        </div>
+        <p className="mt-2 text-[10px] leading-4 text-slate-400">{ui.privacy}</p>
       </div>
     </div>
   );

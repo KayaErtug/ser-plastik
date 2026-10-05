@@ -1,94 +1,115 @@
-import { Zap, Printer, Scissors, PackageCheck, ShieldCheck, Settings } from 'lucide-react';
+import { PackageCheck, Printer, Scissors, Settings, ShieldCheck, Zap } from "lucide-react";
+import { useLanguage } from "../LanguageContext";
 
 export default function Production() {
+  const { language } = useLanguage();
+
+  const copy = {
+    tr: {
+      eyebrow: "Üretim",
+      title: "Siparişten sevkiyata kontrollü üretim akışı.",
+      description:
+        "İhtiyacın netleştirilmesinden baskı, kesim, paketleme ve son kontrole kadar süreci düzenli bir iş akışıyla yönetiyoruz.",
+      machine: "Üretim altyapısı",
+      quality: "Son kontrol & paketleme",
+    },
+    en: {
+      eyebrow: "Production",
+      title: "A controlled workflow from order to dispatch.",
+      description:
+        "From requirement clarification to printing, cutting, packing and final checks, we manage production through a clear operational flow.",
+      machine: "Production infrastructure",
+      quality: "Final check & packing",
+    },
+  }[language];
+
   const steps = [
     {
       icon: Settings,
-      title: 'Hammadde Hazırlığı',
-      description: 'Yüksek kaliteli plastik hammaddelerin seçimi ve hazırlanması'
+      tr: ["İhtiyaç Analizi", "Ürün tipi, ölçü, kalınlık, baskı ve miktar netleştirilir."],
+      en: ["Requirement Review", "Product type, dimensions, thickness, print and quantity are clarified."],
     },
     {
       icon: Zap,
-      title: 'Ekstrüzyon',
-      description: 'Modern ekstrüzyon makinelerinde film üretimi'
+      tr: ["Film Üretimi", "Uygulamaya uygun hammadde ve üretim parametreleri hazırlanır."],
+      en: ["Film Production", "Material and production parameters are prepared for the application."],
     },
     {
       icon: Printer,
-      title: 'Baskı',
-      description: 'Flexo baskı teknolojisi ile renkli ve özel tasarım baskılar'
+      tr: ["Baskı", "Talebe göre marka ve tasarım baskısı üretim akışına alınır."],
+      en: ["Printing", "Brand and artwork printing is added to the workflow when requested."],
     },
     {
       icon: Scissors,
-      title: 'Kesim & Dikiş',
-      description: 'Otomatik kesim ve dikiş makineleri ile şekillendirme'
+      tr: ["Kesim & Form", "Ürün, sipariş ölçülerine ve kullanım şekline göre form kazanır."],
+      en: ["Cutting & Forming", "The product is formed according to order dimensions and intended use."],
     },
     {
       icon: PackageCheck,
-      title: 'Paketleme',
-      description: 'Hijyenik ortamda paketleme ve etiketleme'
+      tr: ["Paketleme", "Ürünler sevkiyat ve kullanım şartlarına uygun biçimde paketlenir."],
+      en: ["Packing", "Products are packed according to handling and shipment requirements."],
     },
     {
       icon: ShieldCheck,
-      title: 'Kalite Kontrol',
-      description: 'ISO standartlarında kalite kontrol ve onay süreci'
-    }
+      tr: ["Son Kontrol", "Sipariş detayları ve ürün görünümü sevkiyat öncesinde kontrol edilir."],
+      en: ["Final Check", "Order details and product appearance are checked before dispatch."],
+    },
   ];
 
   return (
-    <section id="uretim" className="py-20 bg-gradient-to-b from-[#F4F4F6] to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#0D47A1] mb-4">
-            Üretim Sürecimiz
-          </h2>
-          <div className="w-24 h-1 bg-[#D32F2F] mx-auto mb-6"></div>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Modern teknoloji ve kalite kontrol sistemleri ile üretim yapıyoruz
-          </p>
+    <section id="uretim" className="relative overflow-hidden bg-[#071c3b] py-24 text-white sm:py-32">
+      <div className="absolute inset-0 premium-grid opacity-20" />
+      <div className="absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-blue-500/[0.15] blur-[120px]" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-[.85fr_1.15fr] lg:items-end">
+          <div>
+            <span className="section-kicker !text-cyan-200">{copy.eyebrow}</span>
+            <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-[-.04em] sm:text-6xl">{copy.title}</h2>
+          </div>
+          <p className="max-w-2xl text-lg leading-8 text-white/[0.65] lg:justify-self-end">{copy.description}</p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {steps.map((step, index) => (
-            <div
-              key={index}
-              className="relative bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 text-center"
-            >
-              <div className="absolute -top-4 -left-4 bg-gradient-to-br from-[#0D47A1] to-[#2E75D4] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg">
-                {index + 1}
-              </div>
-              <div className="flex justify-center mb-4">
-                <div className="bg-gradient-to-br from-[#0D47A1] to-[#2E75D4] p-4 rounded-lg">
-                  <step.icon className="text-white" size={28} />
+        <div className="mt-14 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {steps.map((step, index) => {
+            const [title, description] = step[language];
+            const Icon = step.icon;
+
+            return (
+              <article
+                key={title}
+                className="group rounded-[1.6rem] border border-white/10 bg-white/[.055] p-6 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-cyan-200/25 hover:bg-white/[.085]"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-cyan-100">
+                    <Icon size={21} />
+                  </div>
+                  <span className="text-3xl font-black text-white/10 transition group-hover:text-white/20">0{index + 1}</span>
                 </div>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                <h3 className="mt-7 text-xl font-bold">{title}</h3>
+                <p className="mt-3 leading-7 text-white/[0.58]">{description}</p>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 grid gap-5 lg:grid-cols-2">
+          {[
+            ["/images/factory-real.webp", copy.machine],
+            ["/images/quality-control.png", copy.quality],
+          ].map(([image, label]) => (
+            <div key={image} className="group relative h-[340px] overflow-hidden rounded-[2rem]">
+              <img
+                src={image}
+                alt={label}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#031126] via-transparent to-transparent" />
+              <p className="absolute bottom-6 left-6 text-2xl font-black tracking-[-.02em]">{label}</p>
             </div>
           ))}
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="relative h-80 rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="/images/production-line.png"
-              alt="Üretim Hattı"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-              <h3 className="text-white text-2xl font-bold">Modern Makine Parkuru</h3>
-            </div>
-          </div>
-
-          <div className="relative h-80 rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="/images/quality-control.png"
-              alt="Kalite Kontrol"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-              <h3 className="text-white text-2xl font-bold">ISO Standartlarında Üretim</h3>
-            </div>
-          </div>
         </div>
       </div>
     </section>
