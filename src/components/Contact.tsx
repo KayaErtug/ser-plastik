@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
 export default function Contact() {
@@ -11,6 +11,7 @@ export default function Contact() {
       description: "Telefon, WhatsApp veya e-posta üzerinden iletişime geçebilirsiniz.",
       address: "Adres",
       phone: "Telefon",
+      whatsapp: "WhatsApp",
       email: "E-posta",
       corporate: "Kurumsal Bilgiler",
       taxOffice: "Vergi Dairesi",
@@ -24,6 +25,7 @@ export default function Contact() {
       description: "Contact us by phone, WhatsApp or e-mail.",
       address: "Address",
       phone: "Phone",
+      whatsapp: "WhatsApp",
       email: "E-mail",
       corporate: "Corporate Information",
       taxOffice: "Tax Office",
@@ -52,6 +54,20 @@ export default function Contact() {
           <a href="tel:02583713050" className="block font-semibold text-slate-700 transition hover:text-[#0D47A1]">0258 371 30 50</a>
           <a href="tel:+905336667381" className="block font-semibold text-slate-700 transition hover:text-[#0D47A1]">+90 533 666 73 81</a>
         </div>
+      ),
+    },
+    {
+      icon: MessageCircle,
+      title: copy.whatsapp,
+      content: (
+        <a
+          href="https://wa.me/905336667381"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-slate-700 transition hover:text-[#0D47A1]"
+        >
+          +90 533 666 73 81
+        </a>
       ),
     },
     {
