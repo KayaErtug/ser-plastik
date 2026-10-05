@@ -2,6 +2,9 @@
 import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 let client = null;
 
@@ -18,7 +21,7 @@ function getClient() {
 function loadSystemPrompt({ intent, language } = {}) {
   // Prompt'u dosyadan okumak: düzenleme kolaylığı
   const promptPath =
-    process.env.AI_CONTEXT_PATH || path.join(process.cwd(), "ai", "ai_context.md");
+    process.env.AI_CONTEXT_PATH || path.join(currentDir, "ai_context.md");
 
   let base = "";
   try {
