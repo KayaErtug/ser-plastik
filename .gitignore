@@ -21,3 +21,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+
+# Runtime lead/debug data must never be committed
+chat-backend/leads.csv
+chat-backend/*.csv
