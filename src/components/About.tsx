@@ -70,6 +70,8 @@ export default function About() {
             <img
               src="/images/factory-real.webp"
               alt="Ser Plastik production"
+              loading="lazy"
+              decoding="async"
               className="h-[520px] w-full object-cover transition duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#031126]/[0.85] via-transparent to-transparent" />
