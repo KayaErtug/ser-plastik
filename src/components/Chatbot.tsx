@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MessageCircle, Phone, Send, X } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
+import { postJson } from "../api";
 
 interface Message {
   text: string;
@@ -67,11 +68,6 @@ export default function Chatbot() {
     [language]
   );
 
-  const API_URL =
-    (import.meta.env.VITE_API_BASE_URL as string) ||
-    (import.meta.env.VITE_API_URL as string) ||
-    "";
-
   useEffect(() => {
     const timer = setTimeout(() => setShowHint(false), 4000);
     return () => clearTimeout(timer);
@@ -115,13 +111,11 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Session-Id": sessionIdRef.current,
-        },
-        body: JSON.stringify({ message: text, history, language }),
+      const response = await postJson("/api/chat", {
+        message: text,
+        history,
+        language,
+        sessionId: sessionIdRef.current,
       });
 
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
