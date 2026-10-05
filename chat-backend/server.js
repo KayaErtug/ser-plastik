@@ -61,9 +61,13 @@ app.use("/api", (req, res, next) => {
 
   bucket.count += 1;
   if (bucket.count > RATE_LIMIT) {
+    const language = req.body?.language === "en" ? "en" : "tr";
     return res.status(429).json({
       error: "RATE_LIMIT",
-      reply: "Çok fazla istek gönderildi. Lütfen kısa bir süre sonra tekrar deneyin.",
+      reply:
+        language === "en"
+          ? "Too many requests were sent. Please try again shortly."
+          : "Çok fazla istek gönderildi. Lütfen kısa bir süre sonra tekrar deneyin.",
     });
   }
 
