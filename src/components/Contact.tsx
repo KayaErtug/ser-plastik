@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
 export default function Contact() {
@@ -12,9 +12,6 @@ export default function Contact() {
       address: "Adres",
       phone: "Telefon",
       email: "E-posta",
-      hours: "Çalışma Saatleri",
-      weekdays: "Pazartesi - Cuma: 08:00 - 18:00",
-      saturday: "Cumartesi: 09:00 - 13:00",
       corporate: "Kurumsal Bilgiler",
       taxOffice: "Vergi Dairesi",
       taxNo: "Vergi No",
@@ -28,9 +25,6 @@ export default function Contact() {
       address: "Address",
       phone: "Phone",
       email: "E-mail",
-      hours: "Business Hours",
-      weekdays: "Monday - Friday: 08:00 - 18:00",
-      saturday: "Saturday: 09:00 - 13:00",
       corporate: "Corporate Information",
       taxOffice: "Tax Office",
       taxNo: "Tax No",
@@ -68,17 +62,7 @@ export default function Contact() {
           info@ser-plastik.com
         </a>
       ),
-    },
-    {
-      icon: Clock,
-      title: copy.hours,
-      content: (
-        <p className="leading-7 text-slate-600">
-          {copy.weekdays}<br />
-          {copy.saturday}
-        </p>
-      ),
-    },
+    }
   ];
 
   return (
