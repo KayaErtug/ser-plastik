@@ -9,7 +9,7 @@ export default function PrivacyNotice() {
       eyebrow: "Veri Kullanımı",
       title: "Talep bilgileriniz yalnızca size dönüş yapmak için kullanılır.",
       body:
-        "Teklif formu veya Mimi üzerinden paylaştığınız ad, firma, telefon, e-posta ve talep detayları yalnızca talebinizi değerlendirmek ve satış ekibimizin size dönüş yapmasını sağlamak amacıyla işlenir. Bilgileriniz reklam amacıyla üçüncü taraflarla paylaşılmaz.",
+        "Teklif formu veya Mimi üzerinden paylaştığınız ad, firma, telefon, e-posta ve talep detayları yalnızca talebinizi değerlendirmek ve satış ekibimizin size dönüş yapmasını sağlamak amacıyla işlenir. Bu bölüm, teklif ve satış iletişimi için hangi bilgilerin alındığını açıklayan genel bir bilgilendirmedir.",
       note:
         "Bu bölüm genel bilgilendirme niteliğindedir. Nihai KVKK ve gizlilik metinleri şirketin hukuk danışmanı tarafından onaylanmalıdır.",
     },
@@ -17,7 +17,7 @@ export default function PrivacyNotice() {
       eyebrow: "Data Use",
       title: "Your inquiry details are used only to respond to your request.",
       body:
-        "Name, company, phone, e-mail and inquiry details shared through the quotation form or Mimi are processed only to evaluate your request and allow the sales team to follow up. Your information is not shared with third parties for advertising purposes.",
+        "Name, company, phone, e-mail and inquiry details shared through the quotation form or Mimi are processed only to evaluate your request and allow the sales team to follow up. This section is a general notice explaining which information is collected for quotation and sales follow-up.",
       note:
         "This section is a general notice. Final privacy and data-protection texts should be reviewed and approved by the company’s legal adviser.",
     },
