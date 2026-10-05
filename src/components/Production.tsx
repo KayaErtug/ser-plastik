@@ -99,7 +99,13 @@ export default function Production() {
             ["/images/quality-control.png", copy.quality],
           ].map(([image, label]) => (
             <div key={image} className="group relative h-[340px] overflow-hidden rounded-[2rem]">
-              <img src={image} alt={label} className="h-full w-full object-cover transition duration-1000 group-hover:scale-105" />
+              <img
+                src={image}
+                alt={label}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition duration-1000 group-hover:scale-105"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-[#031126] via-transparent to-transparent" />
               <p className="absolute bottom-6 left-6 text-2xl font-black tracking-[-.02em]">{label}</p>
             </div>
