@@ -11,6 +11,7 @@ const API_BASES = Array.from(
 
 type PostOptions = {
   keepalive?: boolean;
+  headers?: Record<string, string>;
 };
 
 export async function postJson(
@@ -28,7 +29,10 @@ export async function postJson(
     try {
       const response = await fetch(`${base}${path}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
         body: JSON.stringify(payload),
         keepalive: options.keepalive,
       });
