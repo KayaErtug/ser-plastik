@@ -117,8 +117,15 @@ export default function Chatbot() {
         { headers: { "X-Session-Id": sessionIdRef.current } }
       );
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        setMessages((prev) => [
+          ...prev,
+          { text: data?.reply ?? ui.fallback, isBot: true },
+        ]);
+        return;
+      }
 
       setMessages((prev) => [
         ...prev,
