@@ -111,12 +111,11 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      const response = await postJson("/api/chat", {
-        message: text,
-        history,
-        language,
-        sessionId: sessionIdRef.current,
-      });
+      const response = await postJson(
+        "/api/chat",
+        { message: text, history, language },
+        { headers: { "X-Session-Id": sessionIdRef.current } }
+      );
 
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
