@@ -15,6 +15,7 @@ export default function Header() {
       production: "Üretim",
       quote: "Teklif Al",
       contact: "İletişim",
+      menu: "Menüyü aç / kapat",
     },
     en: {
       home: "Home",
@@ -23,6 +24,7 @@ export default function Header() {
       production: "Production",
       quote: "Request Quote",
       contact: "Contact",
+      menu: "Open / close menu",
     },
   }[language];
 
@@ -94,7 +96,9 @@ export default function Header() {
           <button
             onClick={() => setIsMenuOpen((value) => !value)}
             className="rounded-full border border-white/[0.15] bg-white/10 p-2.5 text-white backdrop-blur lg:hidden"
-            aria-label="Menu"
+            aria-label={copy.menu}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {isMenuOpen ? <X size={23} /> : <Menu size={23} />}
           </button>
@@ -102,7 +106,7 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-white/10 bg-[#06172f]/[0.97] px-4 pb-5 pt-3 backdrop-blur-xl lg:hidden">
+        <div id="mobile-navigation" className="border-t border-white/10 bg-[#06172f]/[0.97] px-4 pb-5 pt-3 backdrop-blur-xl lg:hidden">
           <nav className="mx-auto grid max-w-7xl gap-1">
             {items.map(([id, label]) => (
               <button
