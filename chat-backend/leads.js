@@ -1,6 +1,30 @@
 import { sendLeadEmail, formatMailError } from "./mailer.js";
 
-const emailedSessions = new Set();
+const emailedSessions = new Map();
+const EMAILED_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+
+function wasRecentlyEmailed(sessionId) {
+  const sentAt = emailedSessions.get(sessionId);
+  if (!sentAt) return false;
+
+  if (Date.now() - sentAt > EMAILED_SESSION_TTL_MS) {
+    emailedSessions.delete(sessionId);
+    return false;
+  }
+
+  return true;
+}
+
+function pruneEmailedSessions() {
+  if (emailedSessions.size < 2000) return;
+
+  const now = Date.now();
+  for (const [sessionId, sentAt] of emailedSessions) {
+    if (now - sentAt > EMAILED_SESSION_TTL_MS) {
+      emailedSessions.delete(sessionId);
+    }
+  }
+}
 
 function extractContact(text = "") {
   const value = String(text);
@@ -49,7 +73,8 @@ export async function captureLeadIfNeeded({
   userMessage,
   aiReply = "",
 }) {
-  if (emailedSessions.has(sessionId)) return { captured: true, emailed: false };
+  pruneEmailedSessions();
+  if (wasRecentlyEmailed(sessionId)) return { captured: true, emailed: false };
 
   const { email, phone } = extractContact(userMessage);
   if (!email && !phone) {
@@ -93,7 +118,7 @@ Telefon: ${phone || "-"}
       text: mailText,
     });
 
-    emailedSessions.add(sessionId);
+    emailedSessions.set(sessionId, Date.now());
     return { captured: true, emailed: true };
   } catch (error) {
     console.error("LEAD_EMAIL_ERROR:", formatMailError(error));
