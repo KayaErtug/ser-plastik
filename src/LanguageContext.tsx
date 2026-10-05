@@ -18,6 +18,30 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = language;
+
+    const metadata =
+      language === "en"
+        ? {
+            title: "Ser Plastik | Plastic Packaging & Custom Production",
+            description:
+              "Ser Plastik manufactures courier bags, industrial packaging, plastic bags, garbage bags, transparent packaging and custom plastic packaging solutions.",
+          }
+        : {
+            title: "Ser Plastik | Plastik Ambalaj ve Özel Üretim Çözümleri",
+            description:
+              "Ser Plastik; kargo poşetleri, endüstriyel ambalaj, naylon torbalar, çöp torbaları, jelatin ambalaj ve özel üretim plastik ambalaj çözümleri sunar.",
+          };
+
+    document.title = metadata.title;
+
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (description) description.content = metadata.description;
+
+    const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]');
+    if (ogTitle) ogTitle.content = metadata.title;
+
+    const ogDescription = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
+    if (ogDescription) ogDescription.content = metadata.description;
   }, [language]);
 
   const value = useMemo(
