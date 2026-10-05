@@ -18,17 +18,22 @@ function getClient() {
   return client;
 }
 
+function readContextFile(filePath) {
+  try {
+    return fs.readFileSync(filePath, "utf-8");
+  } catch {
+    return "";
+  }
+}
+
 function loadSystemPrompt({ intent, language } = {}) {
-  // Prompt'u dosyadan okumak: düzenleme kolaylığı
   const promptPath =
     process.env.AI_CONTEXT_PATH || path.join(currentDir, "ai_context.md");
+  const companyContextPath =
+    process.env.COMPANY_CONTEXT_PATH || path.join(currentDir, "company_context.md");
 
-  let base = "";
-  try {
-    base = fs.readFileSync(promptPath, "utf-8");
-  } catch {
-    base = "";
-  }
+  const boundaries = readContextFile(promptPath);
+  const companyContext = readContextFile(companyContextPath);
 
   const WHATSAPP_NUMBER = "+90 533 666 73 81";
   const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
@@ -44,8 +49,11 @@ SABİT İLETİŞİM:
 - WhatsApp: ${WHATSAPP_NUMBER}
 - Fabrika/İşyeri: ${FACTORY_PHONE}
 
-AŞAĞIDAKİ TALİMATLAR BAĞLAYICIDIR:
-${base}
+KONUŞMA SINIRLARI VE DAVRANIŞ KURALLARI:
+${boundaries}
+
+ONAYLI ŞİRKET BİLGİSİ:
+${companyContext}
 `.trim();
 
   return wrapper;
