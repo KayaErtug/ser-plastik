@@ -17,7 +17,6 @@ export default function Footer() {
       whatsapp: "WhatsApp ile İletişim",
       rights: "Tüm hakları saklıdır.",
       privacy: "Gizlilik",
-      terms: "Kullanım Koşulları",
       kvkk: "KVKK",
     },
     en: {
@@ -32,7 +31,6 @@ export default function Footer() {
       whatsapp: "Contact on WhatsApp",
       rights: "All rights reserved.",
       privacy: "Privacy",
-      terms: "Terms of Use",
       kvkk: "Data Protection",
     },
   }[language];
@@ -118,7 +116,6 @@ export default function Footer() {
           <div className="flex flex-wrap gap-5">
             <button onClick={() => scrollTo("privacy")} className="transition hover:text-white">{copy.privacy}</button>
             <button onClick={() => scrollTo("privacy")} className="transition hover:text-white">{copy.kvkk}</button>
-            <span>{copy.terms}</span>
           </div>
         </div>
       </div>
