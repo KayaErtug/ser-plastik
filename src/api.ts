@@ -1,8 +1,12 @@
 const API_BASES = Array.from(
   new Set(
     [
-      import.meta.env.VITE_API_BASE_URL as string | undefined,
-      import.meta.env.VITE_API_URL as string | undefined,
+      ...(import.meta.env.PROD
+        ? ["https://api.ser-plastik.com"]
+        : [
+            import.meta.env.VITE_API_BASE_URL as string | undefined,
+            import.meta.env.VITE_API_URL as string | undefined,
+          ]),
     ]
       .map((value) => String(value || "").trim().replace(/\/$/, ""))
       .filter(Boolean)
