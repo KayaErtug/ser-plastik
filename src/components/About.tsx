@@ -55,11 +55,11 @@ export default function About() {
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {stats.map(({ icon: Icon, label }) => (
               <div
-                key={label === copy.stat1 ? <><CountUp value={20} /> {language === "tr" ? "yıllık deneyim" : "years experience"}</> : label}
+                key={label}
                 className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-white hover:shadow-xl"
               >
                 <Icon className="mb-4 text-[#0D47A1]" size={24} />
-                <p className="text-sm font-bold leading-5 text-[#071c3b]">{label}</p>
+                <p className="text-sm font-bold leading-5 text-[#071c3b]">{label === copy.stat1 ? <><CountUp value={20} /> {language === "tr" ? "yıllık deneyim" : "years experience"}</> : label}</p>
               </div>
             ))}
           </div>
