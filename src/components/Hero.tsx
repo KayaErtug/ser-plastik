@@ -25,10 +25,10 @@ export default function Hero() {
   const copy = {
     tr: {
       eyebrow: "Denizli'den profesyonel ambalaj üretimi",
-      title: "Ambalajı yalnız üretmiyoruz.",
-      accent: "Markanızı taşıyan çözümler tasarlıyoruz.",
+      title: "Üretimin gücü.",
+      accent: "Markanızın imzası.",
       description:
-        "Ser Plastik; perakende, e-ticaret ve endüstriyel kullanım için güvenilir, özelleştirilebilir plastik ambalaj çözümleri sunar.",
+        "Ser Üretim Plastik; e-ticaret, perakende ve sanayi için ihtiyacınıza özel ambalaj üretir.",
       products: "Ürünleri İncele",
       quote: "Teklif Al",
       mia: "Mia ile konuş",
@@ -40,10 +40,10 @@ export default function Hero() {
     },
     en: {
       eyebrow: "Professional packaging production from Denizli",
-      title: "We do more than manufacture packaging.",
-      accent: "We create solutions that carry your brand.",
+      title: "The power of production.",
+      accent: "Your brand. Our craft.",
       description:
-        "Ser Plastik delivers reliable, customizable plastic packaging solutions for retail, e-commerce and industrial applications.",
+        "Ser Üretim Plastik creates packaging tailored to your e-commerce, retail and industrial needs.",
       products: "Explore Products",
       quote: "Request Quote",
       mia: "Talk to Mia",

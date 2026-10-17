@@ -64,6 +64,7 @@ export default function Header() {
             alt="Ser Üretim Plastik"
             className="h-12 w-auto drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
           />
+          <span className="text-left text-[10px] font-black tracking-[.13em] text-white sm:text-xs">SER ÜRETİM<span className="mt-1 block text-[8px] font-medium tracking-[.2em] text-cyan-200/70">PLASTİK · PACKAGING</span></span>
         </button>
 
         <nav className="hidden items-center gap-7 lg:flex">
