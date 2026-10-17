@@ -92,7 +92,7 @@ export default function Products() {
     },
     {
       icon: Layers3,
-      image: "/images/Diğer Ürünler.png",
+      image: "/images/transformer-substation.png",
       objectPosition: "center 76%",
       tr: {
         title: "Mıcıraltı Naylon Örtü",

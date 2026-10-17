@@ -1,4 +1,5 @@
 import Experience from "./components/Experience";
+import ProductMarquee from "./components/ProductMarquee";
 import { useEffect } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -30,6 +31,7 @@ function App() {
           <Experience />
           <About />
           <Products />
+          <ProductMarquee />
           <Production />
           <QuoteForm />
           <FAQ />
