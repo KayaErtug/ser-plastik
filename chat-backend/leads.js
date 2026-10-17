@@ -103,7 +103,7 @@ Session: ${sessionId}
 Ziyaretçi Konuşma Özeti / Mesajları:
 ${userMessage}
 
-Mia Son Cevabı:
+Lina Son Cevabı:
 ${aiReply || "-"}
 
 Tespit Edilen İletişim:

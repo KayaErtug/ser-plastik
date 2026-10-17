@@ -32,7 +32,7 @@ Visitors can:
 - Review Ser Plastik product groups
 - Request a quotation
 - Contact the sales team through WhatsApp
-- Use Mia, Ser Plastik’s AI sales assistant, for product and quotation support
+- Use Lina, Ser Plastik’s AI sales assistant, for product and quotation support
 
 ## Accuracy
 Do not infer unlisted certifications, production capacity, prices, delivery times, stock levels or export countries from this file.

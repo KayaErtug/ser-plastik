@@ -25,8 +25,8 @@ export default function FAQ() {
           a: "Ürün tipi, ölçü, kalınlık veya mikron, baskı isteği, miktar ve teslimat yeri biliniyorsa teklif süreci daha hızlı ilerler.",
         },
         {
-          q: "Mia ne yapabilir?",
-          a: "Mia, ürün ve teklif konularında kısa destek verir; talebinizi netleştirir ve iletişim bilgilerinizi bıraktığınızda satış ekibine iletilmek üzere lead kaydı oluşturulmasına yardımcı olur.",
+          q: "Lina ne yapabilir?",
+          a: "Lina, ürün ve teklif konularında kısa destek verir; talebinizi netleştirir ve iletişim bilgilerinizi bıraktığınızda satış ekibine iletilmek üzere lead kaydı oluşturulmasına yardımcı olur.",
         },
       ],
     },
@@ -51,8 +51,8 @@ export default function FAQ() {
           a: "Product type, dimensions, thickness or micron, printing requirement, quantity and delivery destination help speed up the quotation process.",
         },
         {
-          q: "What can Mia do?",
-          a: "Mia provides short product and quotation support, helps clarify your request and can support lead capture for sales follow-up when you share contact details.",
+          q: "What can Lina do?",
+          a: "Lina provides short product and quotation support, helps clarify your request and can support lead capture for sales follow-up when you share contact details.",
         },
       ],
     },

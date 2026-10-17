@@ -247,7 +247,7 @@ section[id] {
   .product-marquee-card { width: 100%; height: 200px; }
   .marquee-motion-control { display: none; }
 }
-.mia-panel { animation: modalIn .25s ease both; }
+.lina-panel { animation: modalIn .25s ease both; }
 .shine-button { position: relative; overflow: hidden; }
 .shine-button::after { content: ""; position: absolute; inset: 0; transform: translateX(-120%) skewX(-20deg); background: linear-gradient(90deg, transparent, #fff4, transparent); animation: shinePass 7s ease infinite; pointer-events: none; }
 @keyframes shinePass { 0%, 75% { transform: translateX(-120%) skewX(-20deg); } 100% { transform: translateX(120%) skewX(-20deg); } }

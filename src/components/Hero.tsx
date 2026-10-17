@@ -31,7 +31,7 @@ export default function Hero() {
         "Ser Üretim Plastik; e-ticaret, perakende ve sanayi için ihtiyacınıza özel ambalaj üretir.",
       products: "Ürünleri İncele",
       quote: "Teklif Al",
-      mia: "Mia ile konuş",
+      mia: "Lina ile konuş",
       marquee:
         "ÖZEL ÜRETİM • BASKILI POŞET • KARGO AMBALAJI • ENDÜSTRİYEL AMBALAJ • HIZLI TEKLİF • DENİZLİ'DEN ÜRETİM",
       scroll: "Keşfet",
@@ -46,7 +46,7 @@ export default function Hero() {
         "Ser Üretim Plastik creates packaging tailored to your e-commerce, retail and industrial needs.",
       products: "Explore Products",
       quote: "Request Quote",
-      mia: "Talk to Mia",
+      mia: "Talk to Lina",
       marquee:
         "CUSTOM PRODUCTION • PRINTED BAGS • COURIER PACKAGING • INDUSTRIAL PACKAGING • FAST QUOTATION • MADE IN DENIZLI",
       scroll: "Explore",
@@ -120,7 +120,7 @@ export default function Hero() {
               {copy.quote}
             </button>
             <button
-              onClick={() => document.getElementById("mia-chat-trigger")?.click()}
+              onClick={() => document.getElementById("lina-chat-trigger")?.click()}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-6 py-3.5 font-bold text-cyan-50 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-cyan-300/[0.15]"
             >
               <MessageCircleMore size={18} />

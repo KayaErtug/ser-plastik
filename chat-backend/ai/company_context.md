@@ -1,10 +1,10 @@
-# Ser Plastik — Approved Company Context
+# Ser Üretim Plastik — Approved Company Context
 
 Use the facts below only when relevant to an allowed conversation.
 
 ## Company
 - Company: Ser Üretim Plastik Sanayi Limited Şirketi
-- Brand/site name: Ser Plastik
+- Brand/site name: Ser Üretim Plastik
 - Official website: https://seruretim.com
 - Location: Denizli, Türkiye
 - Plastic packaging production experience: 20 years
@@ -36,7 +36,7 @@ Visitors can:
 - Review products
 - Request a quotation
 - Contact the sales team
-- Use Mia for product and quotation support
+- Use Lina for product and quotation support
 
 ## Never infer
 Do not infer or invent:

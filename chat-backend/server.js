@@ -6,14 +6,11 @@ import crypto from "crypto";
 
 import { aiReply } from "./ai/claude.js";
 import { detectIntent } from "./intents/intentDetector.js";
-import { captureLeadIfNeeded } from "./leads.js";
 import { sendLeadEmail } from "./mailer.js";
 
 const app = express();
 
 // ---- Config (ENV öncelikli) ----
-const WHATSAPP_NUMBER = "+90 533 666 73 81";
-const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
 const MAX_CHAT_MESSAGES = Number(process.env.MAX_CHAT_MESSAGES || 8);
 const sessionMessageCounts = new Map();
 const requestBuckets = new Map();
@@ -83,121 +80,21 @@ app.post("/api/chat", async (req, res) => {
   const message = String(req.body?.message ?? "").trim().slice(0, 600);
   const language = req.body?.language === "en" ? "en" : "tr";
   if (!message) return res.status(400).json({ reply: language === "en" ? "Message cannot be empty." : "Mesaj boş olamaz." });
-
-  const intent = detectIntent(message);
-
-  const sessionId =
-    String(req.headers["x-session-id"] || "").trim() ||
-    (crypto.randomUUID?.() ?? crypto.randomBytes(16).toString("hex"));
-
-  const previousSession = sessionMessageCounts.get(sessionId);
-  const count = (previousSession?.count || 0) + 1;
-  sessionMessageCounts.set(sessionId, { count, lastSeen: Date.now() });
-
-  if (count > MAX_CHAT_MESSAGES) {
-    return res.json({
-      reply:
-        language === "en"
-          ? `Mia is designed for short conversations. For sales follow-up, please continue on WhatsApp: ${WHATSAPP_NUMBER}`
-          : `Mia kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
-      limitReached: true,
-    });
+  if (!process.env.ANTHROPIC_API_KEY || !process.env.ANTHROPIC_MODEL) {
+    return res.status(503).json({ error: "ASSISTANT_NOT_CONFIGURED", reply: language === "en" ? "Lina is not available yet. Please try again later." : "Lina henüz kullanıma hazır değil. Lütfen daha sonra tekrar deneyin." });
   }
-
-  const history = Array.isArray(req.body?.history)
-    ? req.body.history.slice(-6).map((item) => ({
-        role: item?.role === "assistant" ? "assistant" : "user",
-        content: String(item?.content ?? "").slice(0, 1200),
-      }))
-    : [];
-
+  const sessionId = String(req.headers["x-session-id"] || "").trim().slice(0, 160) || crypto.randomUUID();
+  const previous = sessionMessageCounts.get(sessionId);
+  const count = (previous?.count || 0) + 1;
+  if (count > MAX_CHAT_MESSAGES) return res.status(429).json({ limitReached: true, reply: language === "en" ? "This conversation has reached its message limit. You can use the quotation form on this page." : "Bu görüşmenin mesaj sınırına ulaşıldı. Sayfadaki teklif formunu kullanabilirsiniz." });
+  sessionMessageCounts.set(sessionId, { count, lastSeen: Date.now() });
+  const history = Array.isArray(req.body?.history) ? req.body.history.slice(-6).map(item => ({ role: item?.role === "assistant" ? "assistant" : "user", content: String(item?.content ?? "").slice(0, 1200) })) : [];
   try {
-    // İletişim / WhatsApp intentlerinde deterministik cevap (AI'ye bırakmıyoruz)
-    if (intent === "website") {
-      return res.json({
-        reply:
-          language === "en"
-            ? "seruretim.com is Ser Üretim Plastik’s official corporate website. The company has 20 years of plastic packaging production experience and serves domestic and international customers with courier bags, industrial packaging, plastic bags, garbage bags, transparent packaging and custom solutions. You can review products, request a quotation, contact sales on WhatsApp, or ask Mia for help."
-            : "seruretim.com, Ser Üretim Plastik’in resmi kurumsal web sitesidir. Firma plastik ambalaj sektöründe 20 yıllık üretim deneyimine sahiptir; kargo poşetleri, endüstriyel ambalaj, naylon torbalar, çöp torbaları, jelatin ambalaj ve özel çözümlerle yurt içi ve yurt dışındaki müşterilerine hizmet verir. Siteden ürünleri inceleyebilir, teklif talebi oluşturabilir, WhatsApp üzerinden satış ekibine ulaşabilir veya Mia’den destek alabilirsiniz.",
-      });
-    }
-
-    if (intent === "contact") {
-      const conversationText = [
-        ...history.filter((item) => item.role === "user").map((item) => item.content),
-        message,
-      ].join("\n");
-
-      await captureLeadIfNeeded({
-        timestamp: new Date().toISOString(),
-        intent,
-        sessionId,
-        userMessage: conversationText,
-      });
-
-      return res.json({
-        reply:
-          language === "en"
-            ? `Contact details:\n• WhatsApp: ${WHATSAPP_NUMBER}\n• Factory/Office: ${FACTORY_PHONE}`
-            : `İletişim bilgilerimiz:\n• WhatsApp: ${WHATSAPP_NUMBER}\n• Fabrika/İşyeri: ${FACTORY_PHONE}`,
-      });
-    }
-
-    if (intent === "whatsapp") {
-      // Lead: WhatsApp intent -> 1 mail
-      await captureLeadIfNeeded({
-        timestamp: new Date().toISOString(),
-        intent,
-        sessionId,
-        userMessage: [
-          ...history.filter((item) => item.role === "user").map((item) => item.content),
-          message,
-        ].join("\n"),
-      });
-
-      return res.json({
-        reply:
-          language === "en"
-            ? `WhatsApp: ${WHATSAPP_NUMBER}\nYou can send your quotation request directly here.`
-            : `WhatsApp hattımız: ${WHATSAPP_NUMBER}\nHızlı teklif için buradan yazabilirsiniz.`,
-      });
-    }
-
-    // Normal akış: AI yanıtı
-    const reply = await aiReply(message, intent, history, language);
-
-    // Lead: sadece sales / whatsapp intentlerinde (whatsapp yukarıda)
-    await captureLeadIfNeeded({
-      timestamp: new Date().toISOString(),
-      intent,
-      sessionId,
-      userMessage: [...history.filter((item) => item.role === "user").map((item) => item.content), message].join("\n"),
-      aiReply: reply,
-    });
-
+    const reply = await aiReply(message, detectIntent(message), history, language);
     return res.json({ reply });
-  } catch (err) {
-    console.error("CHAT_ERROR:", err?.message || err);
-
-    const fallback =
-      language === "en"
-        ? `Connection is temporarily unavailable. For quick contact, WhatsApp: ${WHATSAPP_NUMBER}`
-        : `Şu anda bağlantı sağlanamadı. Hızlı iletişim için WhatsApp: ${WHATSAPP_NUMBER}`;
-
-    // Hata anında bile: intent sales/whatsapp ise lead mail deneyelim
-    try {
-      await captureLeadIfNeeded({
-        timestamp: new Date().toISOString(),
-        intent: intent || "error",
-        sessionId,
-        userMessage: message,
-        aiReply: fallback,
-      });
-    } catch (e) {
-      console.error("LEAD_CAPTURE_ERROR:", e?.message || e);
-    }
-
-    return res.json({ reply: fallback });
+  } catch {
+    console.error("LINA_UPSTREAM_UNAVAILABLE");
+    return res.status(502).json({ error: "ASSISTANT_UNAVAILABLE", reply: language === "en" ? "I could not generate a reply right now. Please try again shortly." : "Şu anda yanıt oluşturamadım. Lütfen kısa bir süre sonra tekrar deneyin." });
   }
 });
 
@@ -257,7 +154,7 @@ ${data.message || "-"}
   try {
     await sendLeadEmail({
       to,
-      subject: `Ser Plastik Web Teklif | ${data.company || data.name} | ${data.product}`,
+      subject: `Ser Üretim Plastik Web Teklif | ${data.company || data.name} | ${data.product}`,
       text: mailText,
     });
 
