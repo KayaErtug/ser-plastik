@@ -19,7 +19,7 @@ export function detectIntent(text = "") {
   }
 
   if (
-    ["site", "web sitesi", "website", "ser-plastik.com", "ser plastik sitesi", "bu site", "this site"].some((term) =>
+    ["site", "web sitesi", "website", "ser-plastik.com", "seruretim.com", "ser plastik sitesi", "bu site", "this site"].some((term) =>
       t.includes(term)
     )
   ) {

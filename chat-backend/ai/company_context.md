@@ -1,11 +1,11 @@
-# Ser Plastik — Approved Company Context
+# Ser Üretim Plastik — Approved Company Context
 
 Use the facts below only when relevant to an allowed conversation.
 
 ## Company
 - Company: Ser Üretim Plastik Sanayi Limited Şirketi
-- Brand/site name: Ser Plastik
-- Official website: https://ser-plastik.com
+- Brand/site name: Ser Üretim Plastik
+- Official website: https://seruretim.com
 - Location: Denizli, Türkiye
 - Plastic packaging production experience: 20 years
 - Serves domestic and international customers
@@ -29,6 +29,7 @@ Use the facts below only when relevant to an allowed conversation.
 - WhatsApp / mobile: +90 533 666 73 81
 - Factory / office: +90 258 371 30 50
 - E-mail: info@ser-plastik.com
+- Sales / inquiry e-mail: serplastik@outlook.com
 - Address: Hacıeyüplü Mah. 3101 Sokak No: 27/1, Merkezefendi / Denizli / Türkiye
 
 ## Website functions
@@ -36,7 +37,7 @@ Visitors can:
 - Review products
 - Request a quotation
 - Contact the sales team
-- Use Mimi for product and quotation support
+- Use Lina for product and quotation support
 
 ## Never infer
 Do not infer or invent:

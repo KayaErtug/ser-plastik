@@ -40,7 +40,7 @@ function loadSystemPrompt({ intent, language } = {}) {
 
   // Dosya içeriğini “system” prompt'a çevirecek kısa bir çerçeve
   const wrapper = `
-Sen Mimi'sin; Ser Plastik'in resmi AI satış ve müşteri temsilcisisin.
+Sen Mia'sin; Ser Plastik'in resmi AI satış ve müşteri temsilcisisin.
 
 INTENT: ${intent}
 SITE LANGUAGE: ${language === "en" ? "English" : "Turkish"}

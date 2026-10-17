@@ -1,13 +1,21 @@
 const API_BASES = Array.from(
   new Set(
     [
-      import.meta.env.VITE_API_BASE_URL as string | undefined,
-      import.meta.env.VITE_API_URL as string | undefined,
+      ...(import.meta.env.PROD
+        ? [import.meta.env.VITE_API_BASE_URL as string | undefined]
+        : [
+            import.meta.env.VITE_API_BASE_URL as string | undefined,
+            import.meta.env.VITE_API_URL as string | undefined,
+          ]),
     ]
       .map((value) => String(value || "").trim().replace(/\/$/, ""))
       .filter(Boolean)
   )
 );
+
+if (import.meta.env.PROD && !API_BASES.length) {
+  throw new Error("API_NOT_CONFIGURED: VITE_API_BASE_URL is required in production");
+}
 
 type PostOptions = {
   keepalive?: boolean;

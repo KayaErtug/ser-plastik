@@ -2,22 +2,17 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import crypto from "crypto";
 
-import { aiReply } from "./ai/openai.js";
+import { aiReply } from "./ai/claude.js";
 import { detectIntent } from "./intents/intentDetector.js";
-import { captureLeadIfNeeded } from "./leads.js";
 import { sendLeadEmail } from "./mailer.js";
+import { customerTransaction, getConversation, newConversation, publicConversation, cleanDraft, draftRevision, saveConfirmedRequest, validVisitor } from "./assistant-store.js";
+import { deliverPendingRequests, notificationConfigured } from "./assistant-notifications.js";
 
 const app = express();
 
 // ---- Config (ENV öncelikli) ----
-const WHATSAPP_NUMBER = "+90 533 666 73 81";
-const FACTORY_PHONE = process.env.FACTORY_PHONE || "+90 258 371 30 50";
-const MAX_CHAT_MESSAGES = Number(process.env.MAX_CHAT_MESSAGES || 8);
-const sessionMessageCounts = new Map();
 const requestBuckets = new Map();
-const SESSION_TTL_MS = 2 * 60 * 60 * 1000;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT = 25;
 
@@ -26,7 +21,7 @@ app.set("trust proxy", 1);
 // CORS: sadece izinli origin'ler
 const allowedOrigins = String(
   process.env.CORS_ORIGINS ||
-    "https://ser-plastik.com,https://www.ser-plastik.com"
+    "https://seruretim.com,https://www.seruretim.com"
 )
   .split(",")
   .map((s) => s.trim())
@@ -41,7 +36,7 @@ app.use(
       return cb(new Error("CORS_NOT_ALLOWED"), false);
     },
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "X-Session-Id"],
+    allowedHeaders: ["Content-Type", "X-Session-Id", "X-Visitor-Token"],
     credentials: false,
     maxAge: 600,
   })
@@ -79,126 +74,76 @@ app.get("/health", (req, res) => {
   res.json({ ok: true, service: "ser-plastik-chat-backend" });
 });
 
+const visitorToken = req => req.headers["x-visitor-token"];
+const assistantFailure = (res, error) => {
+  const code = ["INVALID_VISITOR", "CONVERSATION_NOT_FOUND", "DRAFT_CHANGED", "INCOMPLETE_DRAFT"].includes(error.message) ? error.message : "ASSISTANT_UNAVAILABLE";
+  const status = code === "CONVERSATION_NOT_FOUND" ? 404 : code === "DRAFT_CHANGED" ? 409 : code === "ASSISTANT_UNAVAILABLE" ? 503 : 400;
+  if (status === 503) console.error("LINA_OPERATION_UNAVAILABLE");
+  return res.status(status).json({ error: code });
+};
+
+app.post("/api/assistant/session", async (req, res) => {
+  try {
+    const data = await customerTransaction(visitorToken(req), customer => {
+      const conversation = req.body?.fresh ? newConversation(customer, req.body?.language === "en" ? "en" : "tr") : getConversation(customer, req.body?.conversationId, req.body?.language);
+      return { conversation: publicConversation(conversation), conversations: customer.conversations.slice(-50).map(item => ({ id: item.id, createdAt: item.createdAt, title: item.summary.slice(0, 90) || item.messages.find(m => m.role === "user")?.content.slice(0, 90) || "" })) };
+    });
+    return res.json(data);
+  } catch (error) { return assistantFailure(res, error); }
+});
+
 app.post("/api/chat", async (req, res) => {
   const message = String(req.body?.message ?? "").trim().slice(0, 600);
   const language = req.body?.language === "en" ? "en" : "tr";
   if (!message) return res.status(400).json({ reply: language === "en" ? "Message cannot be empty." : "Mesaj boş olamaz." });
-
-  const intent = detectIntent(message);
-
-  const sessionId =
-    String(req.headers["x-session-id"] || "").trim() ||
-    (crypto.randomUUID?.() ?? crypto.randomBytes(16).toString("hex"));
-
-  const previousSession = sessionMessageCounts.get(sessionId);
-  const count = (previousSession?.count || 0) + 1;
-  sessionMessageCounts.set(sessionId, { count, lastSeen: Date.now() });
-
-  if (count > MAX_CHAT_MESSAGES) {
-    return res.json({
-      reply:
-        language === "en"
-          ? `Mimi is designed for short conversations. For sales follow-up, please continue on WhatsApp: ${WHATSAPP_NUMBER}`
-          : `Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
-      limitReached: true,
-    });
-  }
-
-  const history = Array.isArray(req.body?.history)
-    ? req.body.history.slice(-6).map((item) => ({
-        role: item?.role === "assistant" ? "assistant" : "user",
-        content: String(item?.content ?? "").slice(0, 1200),
-      }))
-    : [];
-
+  if (!process.env.ANTHROPIC_API_KEY || !process.env.ANTHROPIC_MODEL) return res.status(503).json({ error: "ASSISTANT_NOT_CONFIGURED", reply: language === "en" ? "Lina is temporarily unavailable." : "Lina şu anda kullanılamıyor." });
   try {
-    // İletişim / WhatsApp intentlerinde deterministik cevap (AI'ye bırakmıyoruz)
-    if (intent === "website") {
-      return res.json({
-        reply:
-          language === "en"
-            ? "ser-plastik.com is Ser Üretim Plastik’s official corporate website. The company has 20 years of plastic packaging production experience and serves domestic and international customers with courier bags, industrial packaging, plastic bags, garbage bags, transparent packaging and custom solutions. You can review products, request a quotation, contact sales on WhatsApp, or ask Mimi for help."
-            : "ser-plastik.com, Ser Üretim Plastik’in resmi kurumsal web sitesidir. Firma plastik ambalaj sektöründe 20 yıllık üretim deneyimine sahiptir; kargo poşetleri, endüstriyel ambalaj, naylon torbalar, çöp torbaları, jelatin ambalaj ve özel çözümlerle yurt içi ve yurt dışındaki müşterilerine hizmet verir. Siteden ürünleri inceleyebilir, teklif talebi oluşturabilir, WhatsApp üzerinden satış ekibine ulaşabilir veya Mimi’den destek alabilirsiniz.",
-      });
+    if (!visitorToken(req)) {
+      const history = Array.isArray(req.body?.history) ? req.body.history.slice(-50) : [];
+      const result = await aiReply(message, detectIntent(message), history, language);
+      return res.json({ reply: result.reply, memorySaved: false });
     }
-
-    if (intent === "contact") {
-      const conversationText = [
-        ...history.filter((item) => item.role === "user").map((item) => item.content),
-        message,
-      ].join("\n");
-
-      await captureLeadIfNeeded({
-        timestamp: new Date().toISOString(),
-        intent,
-        sessionId,
-        userMessage: conversationText,
-      });
-
-      return res.json({
-        reply:
-          language === "en"
-            ? `Contact details:\n• WhatsApp: ${WHATSAPP_NUMBER}\n• Factory/Office: ${FACTORY_PHONE}`
-            : `İletişim bilgilerimiz:\n• WhatsApp: ${WHATSAPP_NUMBER}\n• Fabrika/İşyeri: ${FACTORY_PHONE}`,
-      });
-    }
-
-    if (intent === "whatsapp") {
-      // Lead: WhatsApp intent -> 1 mail
-      await captureLeadIfNeeded({
-        timestamp: new Date().toISOString(),
-        intent,
-        sessionId,
-        userMessage: [
-          ...history.filter((item) => item.role === "user").map((item) => item.content),
-          message,
-        ].join("\n"),
-      });
-
-      return res.json({
-        reply:
-          language === "en"
-            ? `WhatsApp: ${WHATSAPP_NUMBER}\nYou can send your quotation request directly here.`
-            : `WhatsApp hattımız: ${WHATSAPP_NUMBER}\nHızlı teklif için buradan yazabilirsiniz.`,
-      });
-    }
-
-    // Normal akış: AI yanıtı
-    const reply = await aiReply(message, intent, history, language);
-
-    // Lead: sadece sales / whatsapp intentlerinde (whatsapp yukarıda)
-    await captureLeadIfNeeded({
-      timestamp: new Date().toISOString(),
-      intent,
-      sessionId,
-      userMessage: [...history.filter((item) => item.role === "user").map((item) => item.content), message].join("\n"),
-      aiReply: reply,
+    const requestId = String(req.body?.requestId || "");
+    if (!validVisitor(visitorToken(req)) || !/^[a-f0-9-]{36}$/.test(requestId)) return res.status(400).json({ error: "INVALID_VISITOR_OR_REQUEST" });
+    const result = await customerTransaction(visitorToken(req), async customer => {
+      const conversation = getConversation(customer, req.body?.conversationId, language);
+      const receipt = conversation.receipts.find(item => item.id === requestId);
+      if (receipt) return { reply: receipt.reply, memorySaved: true, conversation: publicConversation(conversation) };
+      conversation.language = language;
+      const memory = { requestId: conversation.requestId || null, draft: conversation.draft, pastConversations: customer.conversations.filter(item => item.id !== conversation.id).slice(-50).map(item => ({ summary: item.summary, requestId: item.requestId || null })) };
+      const generated = await aiReply(message, detectIntent(message), conversation.messages.slice(-50), language, memory);
+      const draft = cleanDraft(generated.draft);
+      if (draftRevision(draft) !== draftRevision(conversation.draft)) conversation.requestId = null;
+      conversation.draft = draft;
+      conversation.summary = generated.summary;
+      conversation.updatedAt = new Date().toISOString();
+      conversation.messages.push({ role: "user", content: message }, { role: "assistant", content: generated.reply });
+      conversation.messages = conversation.messages.slice(-50);
+      const response = { reply: generated.reply, memorySaved: true, conversation: publicConversation(conversation) };
+      conversation.receipts.push({ id: requestId, reply: generated.reply });
+      return response;
     });
+    return res.json(result);
+  } catch (error) { return assistantFailure(res, error); }
+});
 
-    return res.json({ reply });
-  } catch (err) {
-    console.error("CHAT_ERROR:", err?.message || err);
+app.post("/api/assistant/request", async (req, res) => {
+  if (req.body?.confirmed !== true) return res.status(400).json({ error: "EXPLICIT_CONFIRMATION_REQUIRED" });
+  try {
+    const result = await customerTransaction(visitorToken(req), async (customer, owner) => {
+      const conversation = getConversation(customer, req.body?.conversationId, req.body?.language);
+      return saveConfirmedRequest(customer, owner, conversation, req.body?.revision);
+    });
+    void deliverPendingRequests().catch(() => console.error("LINA_NOTIFICATION_RETRY_PENDING"));
+    return res.json({ ...result, notification: notificationConfigured() ? "queued" : "pending_configuration" });
+  } catch (error) { return assistantFailure(res, error); }
+});
 
-    const fallback =
-      language === "en"
-        ? `Connection is temporarily unavailable. For quick contact, WhatsApp: ${WHATSAPP_NUMBER}`
-        : `Şu anda bağlantı sağlanamadı. Hızlı iletişim için WhatsApp: ${WHATSAPP_NUMBER}`;
-
-    // Hata anında bile: intent sales/whatsapp ise lead mail deneyelim
-    try {
-      await captureLeadIfNeeded({
-        timestamp: new Date().toISOString(),
-        intent: intent || "error",
-        sessionId,
-        userMessage: message,
-        aiReply: fallback,
-      });
-    } catch (e) {
-      console.error("LEAD_CAPTURE_ERROR:", e?.message || e);
-    }
-
-    return res.json({ reply: fallback });
-  }
+app.post("/api/assistant/forget", async (req, res) => {
+  try {
+    await customerTransaction(visitorToken(req), customer => { customer.conversations = []; });
+    return res.json({ ok: true });
+  } catch (error) { return assistantFailure(res, error); }
 });
 
 app.post("/api/lead", async (req, res) => {
@@ -257,13 +202,13 @@ ${data.message || "-"}
   try {
     await sendLeadEmail({
       to,
-      subject: `Ser Plastik Web Teklif | ${data.company || data.name} | ${data.product}`,
+      subject: `Ser Üretim Plastik Web Teklif | ${data.company || data.name} | ${data.product}`,
       text: mailText,
     });
 
     return res.json({ ok: true });
   } catch (error) {
-    console.error("FORM_LEAD_EMAIL_ERROR:", error?.message || error);
+    console.error("FORM_LEAD_EMAIL_FAILED");
     return res.status(500).json({ ok: false, error: "LEAD_EMAIL_FAILED" });
   }
 });
@@ -280,12 +225,11 @@ setInterval(() => {
     if (now - bucket.startedAt > RATE_WINDOW_MS * 2) requestBuckets.delete(key);
   }
 
-  for (const [key, session] of sessionMessageCounts) {
-    if (now - session.lastSeen > SESSION_TTL_MS) sessionMessageCounts.delete(key);
-  }
 }, 30 * 60 * 1000).unref();
 
+setInterval(() => { void deliverPendingRequests().catch(() => console.error("LINA_NOTIFICATION_RETRY_PENDING")); }, 60000).unref();
+
 const PORT = Number(process.env.PORT || 3001);
-app.listen(PORT, () => {
+app.listen(PORT, process.env.HOST || "127.0.0.1", () => {
   console.log(`✅ Chat backend çalışıyor → http://localhost:${PORT}`);
 });

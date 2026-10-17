@@ -1,7 +1,10 @@
+import { useState } from "react";
+import ImageLightbox from "./ImageLightbox";
 import { Factory, Package, ShoppingBag, Trash2, Truck, Layers3 } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
 export default function Products() {
+  const [selected, setSelected] = useState<{ image: string; title: string } | null>(null);
   const { language } = useLanguage();
 
   const copy = {
@@ -89,7 +92,7 @@ export default function Products() {
     },
     {
       icon: Layers3,
-      image: "/images/Diğer Ürünler.png",
+      image: "/images/transformer-substation.png",
       objectPosition: "center 76%",
       tr: {
         title: "Mıcıraltı Naylon Örtü",
@@ -104,6 +107,7 @@ export default function Products() {
 
   return (
     <section id="urunler" className="relative overflow-hidden bg-[#eef3f9] py-24 sm:py-32">
+      {selected && <ImageLightbox image={selected.image} title={selected.title} close={() => setSelected(null)} closeLabel={language === "tr" ? "Kapat" : "Close"} />}
       <div className="absolute inset-0 premium-grid opacity-[.04]" />
       <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-500/10 blur-[110px]" />
 
@@ -141,7 +145,8 @@ export default function Products() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#031126] via-[#071c3b]/40 to-transparent transition duration-500 group-hover:via-[#071c3b]/25" />
 
-                <div className="absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.12] text-white backdrop-blur-xl">
+                <button onClick={() => setSelected({ image: product.image, title: item.title })} className="absolute inset-x-0 top-0 h-[48%]" aria-label={`${item.title} — ${language === "tr" ? "görseli büyüt" : "enlarge image"}`} />
+                <div className="pointer-events-none absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/[0.12] text-white backdrop-blur-xl">
                   <Icon size={23} />
                 </div>
 

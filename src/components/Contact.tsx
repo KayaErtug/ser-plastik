@@ -74,9 +74,9 @@ export default function Contact() {
       icon: Mail,
       title: copy.email,
       content: (
-        <a href="mailto:info@ser-plastik.com" className="font-semibold text-slate-700 transition hover:text-[#0D47A1]">
+        <div className="space-y-2 break-words"><a href="mailto:serplastik@outlook.com" className="block font-semibold text-slate-700 transition hover:text-[#0D47A1]">serplastik@outlook.com</a><a href="mailto:info@ser-plastik.com" className="block font-semibold text-slate-700 transition hover:text-[#0D47A1]">
           info@ser-plastik.com
-        </a>
+        </a></div>
       ),
     }
   ];
