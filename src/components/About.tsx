@@ -1,3 +1,4 @@
+import { CountUp } from "./Experience";
 import { Award, Factory, Sparkles, Users } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
@@ -54,7 +55,7 @@ export default function About() {
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {stats.map(({ icon: Icon, label }) => (
               <div
-                key={label}
+                key={label === copy.stat1 ? <><CountUp value={20} /> {language === "tr" ? "yıllık deneyim" : "years experience"}</> : label}
                 className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-white hover:shadow-xl"
               >
                 <Icon className="mb-4 text-[#0D47A1]" size={24} />

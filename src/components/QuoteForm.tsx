@@ -150,8 +150,8 @@ export default function QuoteForm() {
             </p>
             <p className="mt-2 text-sm leading-6 text-white/60">
               {language === "en"
-                ? "Open Mimi and describe the product you need."
-                : "Mimi’yi açın ve ihtiyacınız olan ürünü tarif edin."}
+                ? "Open Mia and describe the product you need."
+                : "Mia’yi açın ve ihtiyacınız olan ürünü tarif edin."}
             </p>
           </div>
         </div>

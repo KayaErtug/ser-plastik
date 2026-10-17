@@ -45,6 +45,8 @@ a {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  background-size: 200% auto;
+  animation: gradientFlow 8s ease infinite;
 }
 
 .section-kicker {
@@ -151,6 +153,51 @@ a {
 section[id] {
   scroll-margin-top: 5.5rem;
 }
+
+@keyframes gradientFlow { 50% { background-position: 100% center; } }
+.scroll-reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s ease, transform .8s ease; }
+.scroll-reveal.is-visible { opacity: 1; transform: none; }
+.rotating-text { position: relative; height: 2rem; margin-top: 1.5rem; overflow: hidden; color: #a5f3fc; font-size: .8rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.rotating-text span { position: absolute; inset: 0; animation: rotateWords 12s infinite both; }
+.rotating-text span:nth-child(2) { animation-delay: 4s; }
+.rotating-text span:nth-child(3) { animation-delay: 8s; }
+@keyframes rotateWords { 0%, 28% { opacity: 1; transform: translateY(0); } 33%, 95% { opacity: 0; transform: translateY(-110%); } 96%, 100% { opacity: 0; transform: translateY(110%); } }
+.material-journey { position: relative; height: 190svh; background: #04152b; color: white; --journey: 0; }
+.journey-stage { position: sticky; top: 0; height: 100svh; min-height: 580px; overflow: hidden; isolation: isolate; background: radial-gradient(ellipse at 50% 45%, #164268 0, #06172f 45%, #030d1a 85%); }
+.journey-grid { position: absolute; inset: -60%; background-image: linear-gradient(#80d9ef12 1px, transparent 1px), linear-gradient(90deg, #80d9ef12 1px, transparent 1px); background-size: 90px 90px; transform: perspective(600px) rotateX(60deg) translateY(20%); mask-image: radial-gradient(ellipse, black, transparent 65%); }
+.journey-heading { position: absolute; z-index: 3; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 1.5rem; text-align: center; pointer-events: none; }
+.journey-heading h2 { margin: 1.5rem 0; font-size: clamp(2.6rem, 6.3vw, 6.4rem); line-height: 1.04; font-weight: 900; letter-spacing: -.06em; text-shadow: 0 4px 40px #04152b; }
+.journey-heading p { max-width: 30rem; color: #c5d7e6; font-size: 1.05rem; }
+.card-tunnel { position: absolute; inset: 0; perspective: 900px; perspective-origin: 50% 48%; }
+.tunnel-card { position: absolute; top: 30%; width: clamp(130px, 23vw, 340px); height: clamp(180px, 31vw, 420px); border: 1px solid #b8edff55; border-radius: 22px; overflow: hidden; box-shadow: 0 20px 100px #0008; background: #0a2642; opacity: .72; will-change: transform; }
+.tunnel-card img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.65); }
+.tunnel-card span { position: absolute; bottom: 16px; left: 16px; font-size: 10px; font-weight: 800; letter-spacing: .15em; padding: 8px; background: #04152bbb; backdrop-filter: blur(12px); }
+.tunnel-card-0 { left: -4%; transform: translateZ(calc(var(--journey) * 360px)) rotateY(30deg) rotateZ(-8deg); }
+.tunnel-card-1 { right: -4%; transform: translateZ(calc(var(--journey) * 360px)) rotateY(-30deg) rotateZ(8deg); }
+.tunnel-card-2 { left: 15%; top: 14%; transform: translateZ(calc(-650px + var(--journey) * 420px)) rotateY(24deg) rotateZ(-10deg); }
+.tunnel-card-3 { right: 15%; top: 60%; transform: translateZ(calc(-650px + var(--journey) * 420px)) rotateY(-24deg) rotateZ(10deg); }
+.journey-footer { position: absolute; bottom: 3rem; left: 7%; right: 7%; display: flex; justify-content: space-between; align-items: center; font-size: .72rem; letter-spacing: .08em; color: #b2cfdf; z-index: 5; }
+.journey-footer span { display: flex; align-items: center; gap: 12px; }
+.journey-footer button { padding: 12px; border: 1px solid #ffffff30; border-radius: 50%; background: #ffffff0a; }
+.marquee-3d { position: absolute; bottom: 1rem; left: 0; right: 0; overflow: hidden; z-index: 4; perspective: 500px; pointer-events: none; }
+.marquee-3d > div { display: flex; width: max-content; font-size: clamp(2rem, 5vw, 5rem); font-weight: 900; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1px #85cce655; transform: rotateY(-9deg) rotateZ(-3deg); animation: marquee 35s linear infinite; }
+.marquee-3d span { flex-shrink: 0; padding-right: .5em; }
+.motion-paused .tunnel-card { transform: none !important; }
+.motion-paused .marquee-3d > div { animation-play-state: paused; }
+.image-lightbox { max-width: 94vw; max-height: 94svh; padding: 0; border: 1px solid #ffffff25; border-radius: 24px; background: #06172f; color: white; overflow: visible; animation: modalIn .22s ease both; }
+.image-lightbox::backdrop { background: #020b18e6; backdrop-filter: blur(12px); }
+.lightbox-content { padding: 12px; }
+.lightbox-content img { display: block; max-width: min(84vw, 1000px); max-height: 73svh; object-fit: contain; border-radius: 16px; }
+.lightbox-content p { padding: 15px 12px 8px; font-weight: 700; }
+.lightbox-content > button { position: absolute; top: 20px; right: 20px; border: 1px solid #fff4; background: #031126dd; padding: 10px; border-radius: 50%; }
+@keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
+.mia-panel { animation: modalIn .25s ease both; }
+.shine-button { position: relative; overflow: hidden; }
+.shine-button::after { content: ""; position: absolute; inset: 0; transform: translateX(-120%) skewX(-20deg); background: linear-gradient(90deg, transparent, #fff4, transparent); animation: shinePass 7s ease infinite; pointer-events: none; }
+@keyframes shinePass { 0%, 75% { transform: translateX(-120%) skewX(-20deg); } 100% { transform: translateX(120%) skewX(-20deg); } }
+button:focus-visible, a:focus-visible { outline: 3px solid #22d3ee; outline-offset: 4px; }
+@media (max-width: 767px) { .material-journey { height: 150svh; } .journey-heading h2 { font-size: 2.8rem; } .tunnel-card { opacity: .42; top: 24%; } .tunnel-card-2 { left: 3%; top: 8%; } .tunnel-card-3 { right: 3%; top: 65%; } }
+@media (prefers-reduced-motion: reduce) { .scroll-reveal { opacity: 1; transform: none; } .material-journey { height: auto; } .journey-stage { position: relative; height: 650px; } .tunnel-card { transform: none !important; } .rotating-text span { display: none; } .rotating-text span:first-child { display: block; opacity: 1; transform: none; } }
 
 @media (max-width: 767px) {
   body {

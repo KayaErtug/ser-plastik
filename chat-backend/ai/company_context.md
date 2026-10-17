@@ -5,7 +5,7 @@ Use the facts below only when relevant to an allowed conversation.
 ## Company
 - Company: Ser Üretim Plastik Sanayi Limited Şirketi
 - Brand/site name: Ser Plastik
-- Official website: https://ser-plastik.com
+- Official website: https://seruretim.com
 - Location: Denizli, Türkiye
 - Plastic packaging production experience: 20 years
 - Serves domestic and international customers
@@ -36,7 +36,7 @@ Visitors can:
 - Review products
 - Request a quotation
 - Contact the sales team
-- Use Mimi for product and quotation support
+- Use Mia for product and quotation support
 
 ## Never infer
 Do not infer or invent:

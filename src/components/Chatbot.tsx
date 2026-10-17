@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MessageCircle, Phone, Send, X } from "lucide-react";
+import { MessageCircle, Phone, Send, Volume2, VolumeX, X } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 import { postJson } from "../api";
 
@@ -15,27 +15,50 @@ export default function Chatbot() {
     {
       text:
         language === "en"
-          ? "Hello, I’m Mimi. I can help with Ser Plastik products, quotations and order requests."
-          : "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
+          ? "Hello, I’m Mia. I can help with Ser Plastik products, quotations and order requests."
+          : "Merhaba, ben Mia. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
       isBot: true,
     },
   ]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
   const [showHint, setShowHint] = useState(true);
+  const [voice, setVoice] = useState(false);
+  const [voiceNotice, setVoiceNotice] = useState("");
+  const generation = useRef(0);
+  const active = useRef(false);
+  const voiceEnabled = useRef(false);
+  const speak = (text: string) => {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = language === "tr" ? "tr-TR" : "en-GB";
+    const match = window.speechSynthesis.getVoices().find(item => item.lang.toLowerCase().startsWith(language));
+    if (match) utterance.voice = match;
+    utterance.onerror = () => setVoiceNotice(language === "tr" ? "Ses oynatılamadı; yazılı yanıtı okuyabilirsiniz." : "Audio unavailable; please read the written reply.");
+    window.speechSynthesis.speak(utterance);
+  };
+
+  useEffect(() => {
+    generation.current++;
+    window.speechSynthesis?.cancel();
+    setLoading(false);
+    setVoiceNotice("");
+    return () => { generation.current++; window.speechSynthesis?.cancel(); };
+  }, [language]);
   const sessionIdRef = useRef(
     typeof crypto !== "undefined" && "randomUUID" in crypto
       ? crypto.randomUUID()
-      : `mimi-${Date.now()}-${Math.random().toString(36).slice(2)}`
+      : `mia-${Date.now()}-${Math.random().toString(36).slice(2)}`
   );
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const MAX_USER_MESSAGES = 8;
 
   const ui = {
     tr: {
-      hint: "Mimi'ye sorun",
+      hint: "Mia'ye sorun",
       subtitle: "Ser Plastik AI Satış Asistanı",
-      typing: "Mimi yazıyor...",
+      typing: "Mia yazıyor...",
       whatsapp: "WhatsApp ile İletişim",
       placeholder: "Mesajınızı yazın...",
       send: "Gönder",
@@ -43,12 +66,12 @@ export default function Chatbot() {
       privacy: "İletişim bilgilerinizi paylaşırsanız yalnızca talebinize dönüş yapılması için satış ekibine iletilir.",
       fallback: "Şu anda bağlantı sağlanamadı. WhatsApp üzerinden bizimle iletişime geçebilirsiniz.",
       noReply: "Yanıt alınamadı.",
-      limit: "Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
+      limit: "Mia kısa görüşmeler için tasarlanmıştır. Talebinizi WhatsApp üzerinden satış ekibimize iletebilirsiniz.",
     },
     en: {
-      hint: "Ask Mimi",
+      hint: "Ask Mia",
       subtitle: "Ser Plastik AI Sales Assistant",
-      typing: "Mimi is typing...",
+      typing: "Mia is typing...",
       whatsapp: "Contact on WhatsApp",
       placeholder: "Type your message...",
       send: "Send",
@@ -56,7 +79,7 @@ export default function Chatbot() {
       privacy: "If you share contact details, they are forwarded to the sales team only for follow-up on your request.",
       fallback: "Connection is temporarily unavailable. Please contact us on WhatsApp.",
       noReply: "No response received.",
-      limit: "Mimi is designed for short conversations. You can continue your request with our sales team on WhatsApp.",
+      limit: "Mia is designed for short conversations. You can continue your request with our sales team on WhatsApp.",
     },
   }[language];
 
@@ -85,8 +108,8 @@ export default function Chatbot() {
         {
           text:
             language === "en"
-              ? "Hello, I’m Mimi. I can help with Ser Plastik products, quotations and order requests."
-              : "Merhaba, ben Mimi. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
+              ? "Hello, I’m Mia. I can help with Ser Plastik products, quotations and order requests."
+              : "Merhaba, ben Mia. Ser Plastik ürünleri, teklif ve sipariş talepleri konusunda yardımcı olabilirim.",
           isBot: true,
         },
       ];
@@ -101,6 +124,7 @@ export default function Chatbot() {
       return;
     }
 
+    const current = generation.current;
     const history = messages.slice(-6).map((message) => ({
       role: message.isBot ? "assistant" : "user",
       content: message.text,
@@ -118,6 +142,7 @@ export default function Chatbot() {
       );
 
       const data = await response.json().catch(() => null);
+      if (current !== generation.current) return;
 
       if (!response.ok) {
         setMessages((prev) => [
@@ -131,10 +156,12 @@ export default function Chatbot() {
         ...prev,
         { text: data?.reply ?? ui.noReply, isBot: true },
       ]);
+      if (voiceEnabled.current && active.current && typeof data?.reply === "string") speak(data.reply);
     } catch {
+      if (current !== generation.current) return;
       setMessages((prev) => [...prev, { text: ui.fallback, isBot: true }]);
     } finally {
-      setLoading(false);
+      if (current === generation.current) setLoading(false);
     }
   };
 
@@ -151,10 +178,10 @@ export default function Chatbot() {
         )}
 
         <button
-          id="mimi-chat-trigger"
-          onClick={() => setIsOpen(true)}
+          id="mia-chat-trigger"
+          onClick={() => { active.current = true; setIsOpen(true); }}
           className="chat-fab relative rounded-full bg-gradient-to-br from-[#0D47A1] to-[#2E75D4] p-4 text-white shadow-2xl transition hover:scale-110"
-          aria-label={`Mimi - ${ui.subtitle}`}
+          aria-label={`Mia - ${ui.subtitle}`}
         >
           <span className="absolute -inset-1 rounded-full bg-[#2E75D4]/30 animate-ping" />
           <span className="relative"><MessageCircle size={30} /></span>
@@ -164,18 +191,22 @@ export default function Chatbot() {
   }
 
   return (
-    <div className="fixed bottom-20 right-3 z-50 flex h-[min(610px,calc(100svh-6rem))] w-[390px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.6rem] border border-white/[0.15] bg-white shadow-[0_30px_90px_rgba(3,17,38,.35)] sm:bottom-6 sm:right-6">
+    <aside aria-label={language === "tr" ? "Mia ambalaj asistanı" : "Mia packaging assistant"} className="mia-panel fixed bottom-20 right-3 z-50 flex h-[min(610px,calc(100svh-6rem))] w-[390px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[1.6rem] border border-white/[0.15] bg-white shadow-[0_30px_90px_rgba(3,17,38,.35)] sm:bottom-6 sm:right-6">
       <div className="flex items-center justify-between bg-gradient-to-r from-[#06172f] to-[#0D47A1] p-4 text-white">
         <div>
-          <h3 className="text-lg font-black">Mimi</h3>
+          <h3 className="text-lg font-black">Mia</h3>
           <p className="text-xs text-white/70">{ui.subtitle}</p>
         </div>
-        <button onClick={() => setIsOpen(false)} className="rounded-full p-2 transition hover:bg-white/10" aria-label={ui.close}>
+        <button onClick={() => { active.current = false; setIsOpen(false); window.speechSynthesis?.cancel(); }} className="rounded-full p-2 transition hover:bg-white/10" aria-label={ui.close}>
           <X size={19} />
         </button>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto bg-[#f4f7fb] p-4">
+      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2 text-xs">
+        <span className="text-slate-400">AI · TR / EN</span>
+        <button aria-pressed={voice} disabled={!("speechSynthesis" in window)} onClick={() => { setVoice(!voice); voiceEnabled.current = !voice; if (voice) window.speechSynthesis?.cancel(); }} className="flex items-center gap-2 rounded-full px-2 py-1 text-blue-800 disabled:opacity-40">{voice ? <Volume2 size={15} /> : <VolumeX size={15} />}{language === "tr" ? (voice ? "Sesli yanıt açık" : "Sesli yanıtı aç") : (voice ? "Voice replies on" : "Enable voice replies")}</button>
+      </div>
+      <div role="log" aria-live="polite" aria-relevant="additions" className="flex-1 space-y-3 overflow-y-auto bg-[#f4f7fb] p-4">
         {messages.map((message, index) => (
           <div key={index} className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}>
             <div
@@ -186,6 +217,7 @@ export default function Chatbot() {
               }`}
             >
               {message.text}
+              {message.isBot && "speechSynthesis" in window && <button onClick={() => speak(message.text)} aria-label={language === "tr" ? "Yanıtı sesli dinle" : "Listen to reply"} className="mt-2 block rounded p-1 text-slate-400 hover:text-blue-700"><Volume2 size={14} /></button>}
             </div>
           </div>
         ))}
@@ -210,6 +242,8 @@ export default function Chatbot() {
       </div>
 
       <div className="border-t border-slate-200 bg-white p-3">
+        {voiceNotice && <p role="status" className="mb-2 text-xs text-amber-800">{voiceNotice}</p>}
+        {voice && <button onClick={() => window.speechSynthesis?.cancel()} className="mb-2 text-xs text-blue-800">{language === "tr" ? "Sesi durdur" : "Stop audio"}</button>}
         <button
           onClick={() => window.open("https://wa.me/905336667381", "_blank")}
           className="mb-2 flex w-full items-center justify-center rounded-xl bg-[#25D366] py-2.5 font-bold text-white transition hover:bg-[#20BA5A]"
@@ -242,7 +276,8 @@ export default function Chatbot() {
           </button>
         </div>
         <p className="mt-2 text-[10px] leading-4 text-slate-400">{ui.privacy}</p>
+        <p className="mt-1 text-[10px] leading-4 text-slate-400">{language === "tr" ? "Sesli yanıtlar cihazınızın Türkçe/İngilizce seslerini kullanır; ses kalitesi tarayıcıya göre değişir." : "Voice replies use your device’s Turkish/English voices; voice quality varies by browser."}</p>
       </div>
-    </div>
+    </aside>
   );
 }

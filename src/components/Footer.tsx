@@ -57,7 +57,7 @@ export default function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 border-b border-white/10 pb-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <img src="/logo.png" alt="Ser Plastik" className="h-16 w-auto" />
+            <img src="/logo.png" alt="Ser Üretim Plastik" className="h-16 w-auto" />
             <p className="mt-5 max-w-sm leading-7 text-white/60">{copy.description}</p>
           </div>
 

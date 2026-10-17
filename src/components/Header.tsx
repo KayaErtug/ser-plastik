@@ -58,10 +58,10 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <button onClick={() => scrollToSection("anasayfa")} className="group flex items-center" aria-label="Ser Plastik">
+        <button onClick={() => scrollToSection("anasayfa")} className="group flex items-center gap-3" aria-label="Ser Plastik">
           <img
             src="/logo.png"
-            alt="Ser Plastik"
+            alt="Ser Üretim Plastik"
             className="h-12 w-auto drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
           />
         </button>

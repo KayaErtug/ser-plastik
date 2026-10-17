@@ -31,7 +31,7 @@ export default function Hero() {
         "Ser Plastik; perakende, e-ticaret ve endüstriyel kullanım için güvenilir, özelleştirilebilir plastik ambalaj çözümleri sunar.",
       products: "Ürünleri İncele",
       quote: "Teklif Al",
-      mimi: "Mimi ile konuş",
+      mia: "Mia ile konuş",
       marquee:
         "ÖZEL ÜRETİM • BASKILI POŞET • KARGO AMBALAJI • ENDÜSTRİYEL AMBALAJ • HIZLI TEKLİF • DENİZLİ'DEN ÜRETİM",
       scroll: "Keşfet",
@@ -46,7 +46,7 @@ export default function Hero() {
         "Ser Plastik delivers reliable, customizable plastic packaging solutions for retail, e-commerce and industrial applications.",
       products: "Explore Products",
       quote: "Request Quote",
-      mimi: "Talk to Mimi",
+      mia: "Talk to Mia",
       marquee:
         "CUSTOM PRODUCTION • PRINTED BAGS • COURIER PACKAGING • INDUSTRIAL PACKAGING • FAST QUOTATION • MADE IN DENIZLI",
       scroll: "Explore",
@@ -95,6 +95,7 @@ export default function Hero() {
             <span className="mt-3 block text-gradient-premium">{copy.accent}</span>
           </h1>
 
+          <div className="rotating-text" aria-hidden="true"><span>{language === "tr" ? "Özel üretim" : "Custom production"}</span><span>{language === "tr" ? "Güçlü ambalaj" : "Strong packaging"}</span><span>{language === "tr" ? "Kalıcı iş ortaklığı" : "Lasting partnership"}</span></div>
           <p className="reveal-up-delay-2 mt-8 max-w-2xl text-lg leading-8 text-white/[0.72] sm:text-xl">
             {copy.description}
           </p>
@@ -107,7 +108,7 @@ export default function Hero() {
           <div className="reveal-up-delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
               onClick={() => scrollTo("urunler")}
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 font-bold text-[#07234b] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(255,255,255,.18)]"
+              className="shine-button group inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 font-bold text-[#07234b] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(255,255,255,.18)]"
             >
               {copy.products}
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
@@ -119,11 +120,11 @@ export default function Hero() {
               {copy.quote}
             </button>
             <button
-              onClick={() => document.getElementById("mimi-chat-trigger")?.click()}
+              onClick={() => document.getElementById("mia-chat-trigger")?.click()}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-300/10 px-6 py-3.5 font-bold text-cyan-50 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-cyan-300/[0.15]"
             >
               <MessageCircleMore size={18} />
-              {copy.mimi}
+              {copy.mia}
             </button>
           </div>
         </div>

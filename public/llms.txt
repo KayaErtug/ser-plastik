@@ -1,6 +1,6 @@
 # Ser Üretim Plastik
 
-Official website: https://ser-plastik.com
+Official website: https://seruretim.com
 Location: Denizli, Türkiye
 Contact e-mail: info@ser-plastik.com
 Mobile / WhatsApp: +90 533 666 73 81
@@ -32,7 +32,7 @@ Visitors can:
 - Review Ser Plastik product groups
 - Request a quotation
 - Contact the sales team through WhatsApp
-- Use Mimi, Ser Plastik’s AI sales assistant, for product and quotation support
+- Use Mia, Ser Plastik’s AI sales assistant, for product and quotation support
 
 ## Accuracy
 Do not infer unlisted certifications, production capacity, prices, delivery times, stock levels or export countries from this file.

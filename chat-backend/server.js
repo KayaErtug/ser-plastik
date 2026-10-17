@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 import crypto from "crypto";
 
-import { aiReply } from "./ai/openai.js";
+import { aiReply } from "./ai/claude.js";
 import { detectIntent } from "./intents/intentDetector.js";
 import { captureLeadIfNeeded } from "./leads.js";
 import { sendLeadEmail } from "./mailer.js";
@@ -26,7 +26,7 @@ app.set("trust proxy", 1);
 // CORS: sadece izinli origin'ler
 const allowedOrigins = String(
   process.env.CORS_ORIGINS ||
-    "https://ser-plastik.com,https://www.ser-plastik.com"
+    "https://seruretim.com,https://www.seruretim.com"
 )
   .split(",")
   .map((s) => s.trim())
@@ -98,8 +98,8 @@ app.post("/api/chat", async (req, res) => {
     return res.json({
       reply:
         language === "en"
-          ? `Mimi is designed for short conversations. For sales follow-up, please continue on WhatsApp: ${WHATSAPP_NUMBER}`
-          : `Mimi kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
+          ? `Mia is designed for short conversations. For sales follow-up, please continue on WhatsApp: ${WHATSAPP_NUMBER}`
+          : `Mia kısa görüşmeler için tasarlanmıştır. Talebinizi satış ekibimize iletmek için WhatsApp: ${WHATSAPP_NUMBER}`,
       limitReached: true,
     });
   }
@@ -117,8 +117,8 @@ app.post("/api/chat", async (req, res) => {
       return res.json({
         reply:
           language === "en"
-            ? "ser-plastik.com is Ser Üretim Plastik’s official corporate website. The company has 20 years of plastic packaging production experience and serves domestic and international customers with courier bags, industrial packaging, plastic bags, garbage bags, transparent packaging and custom solutions. You can review products, request a quotation, contact sales on WhatsApp, or ask Mimi for help."
-            : "ser-plastik.com, Ser Üretim Plastik’in resmi kurumsal web sitesidir. Firma plastik ambalaj sektöründe 20 yıllık üretim deneyimine sahiptir; kargo poşetleri, endüstriyel ambalaj, naylon torbalar, çöp torbaları, jelatin ambalaj ve özel çözümlerle yurt içi ve yurt dışındaki müşterilerine hizmet verir. Siteden ürünleri inceleyebilir, teklif talebi oluşturabilir, WhatsApp üzerinden satış ekibine ulaşabilir veya Mimi’den destek alabilirsiniz.",
+            ? "seruretim.com is Ser Üretim Plastik’s official corporate website. The company has 20 years of plastic packaging production experience and serves domestic and international customers with courier bags, industrial packaging, plastic bags, garbage bags, transparent packaging and custom solutions. You can review products, request a quotation, contact sales on WhatsApp, or ask Mia for help."
+            : "seruretim.com, Ser Üretim Plastik’in resmi kurumsal web sitesidir. Firma plastik ambalaj sektöründe 20 yıllık üretim deneyimine sahiptir; kargo poşetleri, endüstriyel ambalaj, naylon torbalar, çöp torbaları, jelatin ambalaj ve özel çözümlerle yurt içi ve yurt dışındaki müşterilerine hizmet verir. Siteden ürünleri inceleyebilir, teklif talebi oluşturabilir, WhatsApp üzerinden satış ekibine ulaşabilir veya Mia’den destek alabilirsiniz.",
       });
     }
 

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ser-plastik.com/sitemap.xml
+Sitemap: https://seruretim.com/sitemap.xml
