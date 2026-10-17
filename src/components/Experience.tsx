@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowDown, Pause, Play } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 
-const images = ["industrial-packaging-real.webp", "Kargo E-Ticaret Ambalajları.png", "Jelatin Şeffaf Ambalaj.png", "Naylon Torbalar  Poşetler.png"];
+const images = ["industrial-packaging-real.webp", "Kargo E-Ticaret Ambalajları.png", "Jelatin Şeffaf Ambalaj.png", "Naylon Torbalar  Poşetler.png", "factory-real.webp", "Geri Dönüşüm Ürünleri.png"];
 
 export function CountUp({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -58,7 +58,11 @@ export default function Experience() {
           <p>{tr ? "Bir fikrin ambalaja dönüştüğü yolculuk." : "The journey from an idea to its packaging."}</p>
         </div>
         <div className="card-tunnel" aria-hidden="true">
-          {images.map((image, index) => <div className={`tunnel-card tunnel-card-${index}`} key={image}><img src={`/images/${image}`} alt="" loading="lazy" /><span>0{index + 1} / SER ÜRETİM</span></div>)}
+          {Array.from({ length: 7 }, (_, depth) => <div className="tunnel-slice" key={depth} style={{ "--slice": depth } as CSSProperties}>
+            {(["left", "right", "ceiling", "floor"] as const).map((side, index) => <div className={`tunnel-plane tunnel-${side}`} key={side}>
+              <div className="tunnel-poster"><img src={`/images/${images[(depth + index) % images.length]}`} alt="" loading="lazy" /><div className="tunnel-poster-copy"><span>0{(depth + index) % 6 + 1} / SER ÜRETİM</span><strong>{tr ? ["ÜRETİMİN GÜCÜ", "AMBALAJIN GELECEĞİ", "HER DETAYDA KALİTE", "FİKRİNİZİ TAŞIR"][index] : ["POWER OF PRODUCTION", "FUTURE OF PACKAGING", "QUALITY IN EVERY DETAIL", "CARRY YOUR IDEAS"][index]}</strong></div></div>
+            </div>)}
+          </div>)}
         </div>
         <div className="journey-footer"><span><ArrowDown size={16} /> {tr ? "Üretimi keşfetmek için kaydırın" : "Scroll to explore production"}</span><button onClick={() => setPaused(!paused)} aria-label={tr ? (paused ? "Animasyonu sürdür" : "Animasyonu duraklat") : (paused ? "Resume animation" : "Pause animation")}>{paused ? <Play size={16} /> : <Pause size={16} />}</button></div>
       </div>
