@@ -29,6 +29,7 @@ Use the facts below only when relevant to an allowed conversation.
 - WhatsApp / mobile: +90 533 666 73 81
 - Factory / office: +90 258 371 30 50
 - E-mail: info@ser-plastik.com
+- Sales / inquiry e-mail: serplastik@outlook.com
 - Address: Hacıeyüplü Mah. 3101 Sokak No: 27/1, Merkezefendi / Denizli / Türkiye
 
 ## Website functions

@@ -103,6 +103,11 @@ jobs:
           node --check intents/intentDetector.js
           node --check ai/openai.js
           node --check ai/claude.js
+          node --check assistant-store.js
+          node --check assistant-notifications.js
+
+      - name: Lina persistence checks
+        run: node --test tests/assistant-store.test.js
 
       - name: Mimi intent behavior checks
         run: |

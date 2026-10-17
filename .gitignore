@@ -26,3 +26,4 @@ dist-ssr
 # Runtime lead/debug data must never be committed
 chat-backend/leads.csv
 chat-backend/*.csv
+chat-backend/data/

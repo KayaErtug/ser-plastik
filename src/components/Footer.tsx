@@ -97,6 +97,7 @@ export default function Footer() {
               <a href="tel:+905336667381" className="flex items-center gap-2 transition hover:text-white">
                 <Phone size={15} /> +90 533 666 73 81
               </a>
+              <a href="mailto:serplastik@outlook.com" className="block break-words transition hover:text-white">serplastik@outlook.com</a>
               <a href="mailto:info@ser-plastik.com" className="block transition hover:text-white">info@ser-plastik.com</a>
             </div>
 
