@@ -158,7 +158,7 @@ section[id] {
 .scroll-reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s ease, transform .8s ease; }
 .scroll-reveal.is-visible { opacity: 1; transform: none; }
 .rotating-text { position: relative; height: 2rem; margin-top: 1.5rem; overflow: hidden; color: #a5f3fc; font-size: .8rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-.rotating-text span { position: absolute; inset: 0; animation: rotateWords 12s infinite both; }
+.rotating-text span { position: absolute; inset: 0; opacity: 0; animation: rotateWords 12s infinite; }
 .rotating-text span:nth-child(2) { animation-delay: 4s; }
 .rotating-text span:nth-child(3) { animation-delay: 8s; }
 @keyframes rotateWords { 0%, 28% { opacity: 1; transform: translateY(0); } 33%, 95% { opacity: 0; transform: translateY(-110%); } 96%, 100% { opacity: 0; transform: translateY(110%); } }
@@ -185,7 +185,8 @@ section[id] {
 .journey-footer span { display: flex; align-items: center; gap: 12px; }
 .journey-footer button { padding: 12px; border: 1px solid #ffffff30; border-radius: 50%; background: #ffffff0a; }
 .marquee-3d { position: absolute; bottom: 1rem; left: 0; right: 0; overflow: hidden; z-index: 4; perspective: 500px; pointer-events: none; }
-.marquee-3d > div { display: flex; width: max-content; font-size: clamp(2rem, 5vw, 5rem); font-weight: 900; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1px #85cce655; transform: rotateY(-9deg) rotateZ(-3deg); animation: marquee 35s linear infinite; }
+.marquee-3d > div { display: flex; width: max-content; font-size: clamp(2rem, 5vw, 5rem); font-weight: 900; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1px #85cce655; animation: marqueeDepth 35s linear infinite; }
+@keyframes marqueeDepth { from { transform: rotateY(-9deg) rotateZ(-3deg) translateX(0); } to { transform: rotateY(-9deg) rotateZ(-3deg) translateX(-50%); } }
 .marquee-3d span { flex-shrink: 0; padding-right: .5em; }
 .motion-paused .tunnel-slice { transform: translateZ(calc(var(--tunnel-size) * var(--slice) * -1)) !important; }
 .motion-paused .marquee-3d > div { animation-play-state: paused; }
