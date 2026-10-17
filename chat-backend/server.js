@@ -286,6 +286,6 @@ setInterval(() => {
 }, 30 * 60 * 1000).unref();
 
 const PORT = Number(process.env.PORT || 3001);
-app.listen(PORT, () => {
+app.listen(PORT, process.env.HOST || "127.0.0.1", () => {
   console.log(`✅ Chat backend çalışıyor → http://localhost:${PORT}`);
 });
